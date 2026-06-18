@@ -2060,6 +2060,45 @@
     } else {
       empty.style.display = 'block';
     }
-  </script>
+  
+// ===== DEFENSIVE WRAPPER =====
+(function() {
+  try {
+    // Force all interactive elements to be tappable
+    document.querySelectorAll('button, .filter-chip, .view-chip, .date-preset, .date-mode').forEach(el => {
+      el.style.cursor = 'pointer';
+      el.style.pointerEvents = 'auto';
+      el.style.webkitTapHighlightColor = 'rgba(0,0,0,0.12)';
+    });
+
+    // Ensure settingsDrawer is properly initialized
+    const sd = document.getElementById('settingsDrawer');
+    if (sd) {
+      sd.style.overflow = 'hidden';
+      sd.style.display = 'block';
+    }
+
+    // Force settingsDrawer z-index above overlay
+    const modal = document.getElementById('modal');
+    if (modal) {
+      modal.style.zIndex = '150';
+    }
+
+    // Debug: add a simple touch test
+    const settingsBtn = document.getElementById('settingsBtn');
+    if (settingsBtn) {
+      settingsBtn.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        console.log('settingsBtn touchstart fired');
+        this.click();
+      }, { passive: false });
+    }
+
+    console.log('Defense wrapper OK, buttons found:', document.querySelectorAll('button').length);
+  } catch(e) {
+    console.error('Defense wrapper error:', e.message);
+  }
+})();
+</script>
 </body>
 </html>
