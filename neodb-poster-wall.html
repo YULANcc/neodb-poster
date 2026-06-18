@@ -176,36 +176,25 @@
     .filter-row::-webkit-scrollbar { display: none; }
 
     .filter-chip {
-      padding: 6px 12px;
-      border-radius: 0;
-      border: none;
-      border-right: 1px solid var(--border);
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border-dark);
       background: transparent;
       color: var(--ink-muted);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 400;
       cursor: pointer;
-      transition: var(--transition);
-      font-family: 'Inter', sans-serif;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
+      transition: all 0.18s ease;
+      font-family: inherit;
+      letter-spacing: 0.2px;
       flex-shrink: 0;
+      white-space: nowrap;
     }
-
-    .filter-chip:last-child { border-right: none; }
-    .filter-chip:hover { color: var(--ink); }
-    .filter-chip.active { color: var(--ink); font-weight: 600; position: relative; }
-    .filter-chip.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 8px; right: 8px;
-      height: 2px;
-      background: var(--ink);
-    }
+    .filter-chip:last-child { border-right: 1.5px solid var(--border-dark); }
+    .filter-chip:hover { border-color: var(--ink-muted); color: var(--ink); background: var(--bg-muted); }
+    .filter-chip.active { color: var(--ink); font-weight: 600; background: var(--bg-elevated); border-color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
     .filter-chip:disabled { color: var(--ink-faint); cursor: default; pointer-events: none; }
-    .filter-chip:disabled.active { font-weight: 400; }
-    .filter-chip:disabled.active::after { display: none; }
+    .filter-chip:disabled.active { font-weight: 400; background: transparent; box-shadow: none; }
 
     .filter-divider {
       width: 1px;
@@ -247,26 +236,23 @@
     }
 
     .view-chip {
-      padding: 4px 10px;
-      border-radius: 0;
-      border: 1px solid var(--border);
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1.5px solid transparent;
       background: transparent;
       color: var(--ink-muted);
-      font-size: 10px;
-      font-weight: 500;
+      font-size: 12px;
+      font-weight: 400;
       cursor: pointer;
-      transition: var(--transition);
-      font-family: 'Inter', sans-serif;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+      transition: all 0.18s ease;
+      font-family: inherit;
       flex-shrink: 0;
     }
-
-    .view-chip:first-of-type { border-right: none; }
-    .view-chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .view-chip:first-of-type { border-right: 1.5px solid transparent; }
     .view-chip:hover:not(.active) { border-color: var(--border-dark); color: var(--ink); }
-    .view-chip:disabled { color: var(--ink-faint); cursor: default; pointer-events: none; border-color: var(--border); }
-    .view-chip:disabled.active { background: var(--ink-faint); border-color: var(--ink-faint); }
+    .view-chip.active { color: var(--ink); font-weight: 600; border-color: var(--ink); background: var(--bg-elevated); }
+    .view-chip:disabled { color: var(--ink-faint); cursor: default; pointer-events: none; }
+    .view-chip:disabled.active { background: transparent; }
 
     .date-bar {
       max-width: 1280px;
@@ -630,6 +616,7 @@
       justify-content: center;
       flex-wrap: wrap;
     }
+    .empty-actions .btn { padding: 10px 24px; font-size: 13px; font-weight: 500; border-radius: 24px; }
 
     .modal-overlay {
       position: fixed; inset: 0; z-index: 200;
@@ -745,24 +732,25 @@
 
     .modal-close {
       position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 28px;
-      height: 28px;
-      border-radius: 0;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
       border: 1px solid var(--border);
-      background: var(--bg);
+      background: var(--bg-elevated);
       color: var(--ink-muted);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: var(--transition);
+      transition: all 0.15s ease;
     }
 
     .modal-close:hover {
-      border-color: var(--ink-muted);
+      border-color: var(--border-dark);
       color: var(--ink);
+      background: var(--bg-muted);
     }
 
     .toast {
@@ -924,12 +912,20 @@
       .masthead-inner { flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: nowrap; }
       .masthead-left { flex: 1; min-width: 0; }
       .masthead-right { align-items: flex-start; width: auto; flex-shrink: 0; }
-      .masthead-actions { flex-direction: row; align-items: center; gap: 2px; }
-      .masthead-actions .btn { padding: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: var(--ink-muted); }
-      .masthead-actions .btn:hover { color: var(--ink); background: var(--bg-muted); }
-      .masthead-actions .btn svg { width: 20px; height: 20px; }
-      .masthead-actions .btn .btn-label { display: none; }
-      .masthead-meta { font-size: 10px; color: var(--ink-faint); margin-top: 4px; }
+      .masthead-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      background: var(--bg-warm);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .masthead-actions .btn { padding: 6px 10px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: var(--ink-muted); border-radius: var(--radius); transition: all 0.15s ease; }
+    .masthead-actions .btn:hover { color: var(--ink); background: var(--bg-muted); }
+    .masthead-actions .btn svg { width: 16px; height: 16px; }
+    .masthead-actions .btn .btn-label { display: inline; font-size: 12px; font-weight: 500; }
+    .masthead-meta { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.3px; }
 
       .toolbar { padding: 12px 16px; flex-direction: column; align-items: stretch; gap: 12px; }
       .filter-row { gap: 6px; justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
@@ -1466,7 +1462,7 @@
             const cat = item.category || 'other';
             const icon = catIcons[cat] || '\u{1F4E6}';
             const star = rating ? '\u2605 ' + rating + ' \u00b7 ' : '';
-    
+
             if (cover) {
               const proxiedCover = 'https://images.weserv.nl/?url=' + encodeURIComponent(cover) + '&w=400&h=600&fit=cover';
               return '<div class="poster-cell" style="width:100%;height:301px;overflow:hidden;position:relative;border-radius:8px;box-shadow:0 2px 8px rgba(60,40,20,0.10);" data-cover="' + escapeHTML(cover) + '">'
@@ -1484,7 +1480,7 @@
               + '<div style="font-family:serif;font-size:13px;font-weight:600;color:#fff;line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + title + '</div>'
               + '<div style="font-size:11px;color:rgba(255,255,255,0.65);margin-top:4px;">' + star + (statusLabels[status] || status) + '</div>'
               + '</div>';
-    
+
     async function exportPoster() {
       if (state.filtered.length === 0) {
         showToast('Nothing to export', 'error');
@@ -1767,7 +1763,7 @@
             ctx.restore();
           });
 
-          // Footer — DOM: padding:20px, label RIGHT, stats LEFT, divider in middle
+          // Footer - DOM: padding:20px, label RIGHT, stats LEFT, divider in middle
           const footerY = gridY + gridH + 20; // 20px padding-top matching DOM
           const footerContentH = 56;
 
@@ -1793,7 +1789,7 @@
             stats.ratings.length ? { label: 'AVG', value: (stats.ratings.reduce((a, b) => a + b, 0) / stats.ratings.length).toFixed(1) } : null,
           ].filter(s => s !== null);
 
-          // Stats LEFT — measure, then draw each block at fixed left positions
+          // Stats LEFT - measure, then draw each block at fixed left positions
           const statBlocks = statDefs.map(s => {
             ctx.font = 'bold 22px Georgia, serif';
             const vw = ctx.measureText(String(s.value)).width;
