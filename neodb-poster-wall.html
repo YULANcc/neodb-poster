@@ -1,0 +1,2080 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>The Shelf - NeoDB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-warm: #faf9f7;
+      --bg-muted: #f0eeea;
+      --bg-elevated: #ffffff;
+      --ink: #111111;
+      --ink-secondary: #555555;
+      --ink-muted: #999999;
+      --ink-faint: #bbbbbb;
+      --border: #e5e3df;
+      --border-dark: #d0cec8;
+      --accent: #c45c3e;
+      --accent-soft: rgba(196,92,62,0.06);
+      --accent-hover: #a84a30;
+      --green: #3a7a5a;
+      --green-soft: rgba(58,122,90,0.08);
+      --blue: #4a6fa0;
+      --blue-soft: rgba(74,111,160,0.08);
+      --amber: #b08030;
+      --amber-soft: rgba(176,128,48,0.08);
+      --radius: 2px;
+      --radius-lg: 4px;
+      --transition: 0.15s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .scroll-x {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      white-space: nowrap;
+    }
+    .scroll-x::-webkit-scrollbar { display: none; }
+
+    .masthead {
+      background: var(--bg);
+    }
+
+    .masthead-top {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 48px 32px 32px;
+    }
+
+    .masthead-inner {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .masthead-left { flex: 1; min-width: 0; }
+
+    .masthead-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 12px;
+    }
+
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      line-height: 1.05;
+      color: var(--ink);
+    }
+
+    .masthead-sub {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-top: 8px;
+      font-weight: 400;
+    }
+
+    .masthead-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .masthead-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .masthead-meta {
+      font-size: 11px;
+      color: var(--ink-faint);
+      letter-spacing: 0.3px;
+    }
+
+    .btn-label { display: inline; }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      border: none;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-solid { background: var(--ink); color: #fff; }
+    .btn-solid:hover { background: #333; }
+    .btn-outline { background: transparent; color: var(--ink-secondary); border: 1px solid var(--border-dark); }
+    .btn-outline:hover { border-color: var(--ink-muted); color: var(--ink); }
+    .btn-text { background: transparent; color: var(--ink-muted); border: none; padding: 8px 10px; }
+    .btn-text:hover { color: var(--ink); }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-accent:hover { background: var(--accent-hover); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .toolbar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 32px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+      margin-bottom: -2px;
+      max-width: 100%;
+    }
+
+    .filter-row::-webkit-scrollbar { display: none; }
+
+    .filter-chip {
+      padding: 6px 12px;
+      border-radius: 0;
+      border: none;
+      border-right: 1px solid var(--border);
+      background: transparent;
+      color: var(--ink-muted);
+      font-size: 11px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .filter-chip:last-child { border-right: none; }
+    .filter-chip:hover { color: var(--ink); }
+    .filter-chip.active { color: var(--ink); font-weight: 600; position: relative; }
+    .filter-chip.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 8px; right: 8px;
+      height: 2px;
+      background: var(--ink);
+    }
+    .filter-chip:disabled { color: var(--ink-faint); cursor: default; pointer-events: none; }
+    .filter-chip:disabled.active { font-weight: 400; }
+    .filter-chip:disabled.active::after { display: none; }
+
+    .filter-divider {
+      width: 1px;
+      height: 14px;
+      background: var(--border-dark);
+      margin: 0 8px;
+      flex-shrink: 0;
+    }
+
+    .toolbar-right {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .sub-toolbar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .sub-toolbar-left { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+    .sub-toolbar-right { display: flex; align-items: center; gap: 12px; }
+
+    .view-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+
+    .view-chip {
+      padding: 4px 10px;
+      border-radius: 0;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--ink-muted);
+      font-size: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .view-chip:first-of-type { border-right: none; }
+    .view-chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .view-chip:hover:not(.active) { border-color: var(--border-dark); color: var(--ink); }
+    .view-chip:disabled { color: var(--ink-faint); cursor: default; pointer-events: none; border-color: var(--border); }
+    .view-chip:disabled.active { background: var(--ink-faint); border-color: var(--ink-faint); }
+
+    .date-bar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .date-bar::-webkit-scrollbar { display: none; }
+
+    .date-preset {
+      padding: 4px 10px;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+      color: var(--ink-muted);
+      font-size: 11px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .date-preset:hover { color: var(--ink); }
+    .date-preset.active { color: var(--ink); font-weight: 600; }
+    .date-preset:disabled { color: var(--ink-faint); cursor: default; pointer-events: none; }
+    .date-preset:disabled.active { font-weight: 400; }
+
+    .date-mode-group {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-right: 16px;
+      padding-right: 16px;
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .date-mode {
+      padding: 4px 10px;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+      color: var(--ink-muted);
+      font-size: 11px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+    .date-mode:hover { color: var(--ink); }
+    .date-mode.active { color: var(--ink); font-weight: 600; background: var(--ink); color: #fff; }
+
+    .date-preset-group {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex-wrap: nowrap;
+    }
+    .date-preset-group.hidden { display: none; }
+
+    .date-range {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 12px;
+      padding-left: 12px;
+      border-left: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .date-range input[type="date"] {
+      padding: 4px 8px;
+      border-radius: 0;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 11px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+    }
+
+    .date-range input[type="date"]:focus { border-color: var(--ink-muted); }
+    .date-range span { font-size: 11px; color: var(--ink-faint); }
+
+    .export-bar {
+      display: flex;
+      align-items: center;
+    }
+
+    .stats-bar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 32px;
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      padding: 0 20px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:first-child { padding-left: 0; }
+    .stat:last-child { border-right: none; }
+
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--ink-muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 32px 80px;
+    }
+
+    .poster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 20px;
+    }
+
+    .btn-label { display: inline; }
+
+    .btn-label { display: inline; }
+
+    .poster {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--bg-elevated);
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+      aspect-ratio: 2/3;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .poster:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .poster-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .poster:hover .poster-img { transform: scale(1.03); }
+
+    .poster-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.3) 45%, transparent 70%);
+      opacity: 0;
+      transition: opacity var(--transition);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 16px;
+    }
+
+    .poster:hover .poster-overlay { opacity: 1; }
+
+    .poster-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #fff;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .poster-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .poster-rating {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      color: #f5c842;
+    }
+
+    .poster-rating svg { width: 11px; height: 11px; }
+
+    .poster-status {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .status-wishlist { background: var(--blue-soft); color: var(--blue); }
+    .status-progress { background: var(--amber-soft); color: var(--amber); }
+    .status-complete { background: var(--green-soft); color: var(--green); }
+    .status-dropped { background: rgba(196,92,62,0.1); color: var(--accent); }
+
+    .poster-category {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(8px);
+      color: var(--ink-secondary);
+      z-index: 2;
+    }
+
+    .poster-date {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 500;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(8px);
+      color: var(--ink-muted);
+      z-index: 2;
+    }
+
+    .poster-placeholder {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .poster-placeholder .ph-icon {
+      font-size: 28px;
+      opacity: 0.35;
+    }
+
+    .poster-placeholder .ph-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      color: var(--ink-faint);
+      padding: 0 16px;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .month-header {
+      grid-column: 1 / -1;
+      padding: 36px 0 12px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .month-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .month-header span {
+      font-size: 11px;
+      color: var(--ink-muted);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px;
+      color: var(--ink-muted);
+      font-size: 13px;
+      gap: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .spinner {
+      font-size: 16px;
+      line-height: 1;
+      animation: spin 1s linear infinite;
+      color: var(--ink-muted);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty {
+      text-align: center;
+      padding: 120px 20px;
+    }
+
+    .empty h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+
+    .empty p {
+      color: var(--ink-muted);
+      font-size: 13px;
+      max-width: 380px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
+    }
+
+    .empty-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      max-width: 480px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      transform: scale(0.97) translateY(6px);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+
+    .modal-header {
+      display: flex;
+      gap: 24px;
+      padding: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-cover {
+      width: 100px;
+      flex-shrink: 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      aspect-ratio: 2/3;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .modal-cover img { width: 100%; height: 100%; object-fit: cover; }
+
+    .modal-info { flex: 1; min-width: 0; }
+
+    .modal-info h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+
+    .modal-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      font-size: 12px;
+      color: var(--ink-secondary);
+      margin-bottom: 10px;
+    }
+
+    .modal-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .modal-body { padding: 20px 28px 28px; }
+
+    .modal-comment {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink-secondary);
+      padding: 16px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .modal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .modal-tag {
+      padding: 3px 10px;
+      border-radius: 0;
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: transparent;
+      color: var(--ink-muted);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .modal-tag:hover {
+      border-color: var(--ink-muted);
+      color: var(--ink);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 28px;
+      height: 28px;
+      border-radius: 0;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--ink-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      border-color: var(--ink-muted);
+      color: var(--ink);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 0;
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 600;
+      letter-spacing: 0.3px;
+      max-width: 90vw;
+      text-align: center;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.error { background: var(--accent); }
+    .toast.success { background: var(--green); }
+
+    .poster-export-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .poster-export-overlay.open { opacity: 1; pointer-events: all; }
+
+    .poster-export-dialog {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      max-width: 520px;
+      width: 100%;
+      padding: 28px;
+    }
+
+    .poster-export-dialog h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .poster-export-dialog > p {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-bottom: 20px;
+    }
+
+    .poster-preview-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      background: var(--bg-muted);
+      padding: 20px;
+    }
+
+    .poster-preview-wrap img {
+      max-width: 100%;
+      max-height: 500px;
+      object-fit: contain;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .poster-export-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .settings-drawer {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      border-bottom: 1px solid transparent;
+    }
+
+    .settings-drawer.open {
+      max-height: 300px;
+      padding: 20px 32px 24px;
+      border-bottom-color: var(--border);
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 560px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .field input {
+      padding: 8px 12px;
+      border-radius: 0;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 13px;
+      outline: none;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .field input:focus { border-color: var(--ink-muted); }
+    .field input::placeholder { color: var(--ink-faint); }
+
+    .field-hint {
+      font-size: 11px;
+      color: var(--ink-faint);
+      line-height: 1.4;
+    }
+
+
+    @media (min-width: 1200px) {
+      .poster-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 0; }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .masthead-top { padding: 20px 16px 16px; }
+      .masthead-eyebrow { font-size: 9px; letter-spacing: 2px; margin-bottom: 4px; }
+      .masthead-title { font-size: 24px; }
+      .masthead-sub { font-size: 11px; margin-top: 2px; }
+      .masthead-inner { flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: nowrap; }
+      .masthead-left { flex: 1; min-width: 0; }
+      .masthead-right { align-items: flex-start; width: auto; flex-shrink: 0; }
+      .masthead-actions { flex-direction: row; align-items: center; gap: 2px; }
+      .masthead-actions .btn { padding: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: var(--ink-muted); }
+      .masthead-actions .btn:hover { color: var(--ink); background: var(--bg-muted); }
+      .masthead-actions .btn svg { width: 20px; height: 20px; }
+      .masthead-actions .btn .btn-label { display: none; }
+      .masthead-meta { font-size: 10px; color: var(--ink-faint); margin-top: 4px; }
+
+      .toolbar { padding: 12px 16px; flex-direction: column; align-items: stretch; gap: 12px; }
+      .filter-row { gap: 6px; justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+      .filter-row:last-child { border-bottom: none; }
+      .filter-chip { padding: 8px 12px; font-size: 11px; white-space: nowrap; }
+
+      .sub-toolbar { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
+      .sub-toolbar-left { justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+      .sub-toolbar-left::-webkit-scrollbar { display: none; }
+      .sub-toolbar-right { justify-content: flex-start; width: 100%; }
+
+      .view-label { margin-right: 6px; font-size: 9px; }
+      .view-chip { padding: 3px 8px; font-size: 10px; }
+
+      .date-bar { padding: 10px 16px; gap: 4px; overflow-x: auto; align-items: center; }
+      .date-bar .view-label { margin-right: 8px; flex-shrink: 0; }
+      .date-mode-group { margin-right: 8px; padding-right: 8px; border-right: 1px solid var(--border); flex-shrink: 0; }
+      .date-mode { padding: 3px 8px; font-size: 10px; }
+      .date-preset { padding: 3px 8px; font-size: 10px; white-space: nowrap; }
+      .date-preset-group { flex-wrap: nowrap; }
+
+      .stats-bar { padding: 12px 16px; flex-direction: column; gap: 12px; align-items: stretch; }
+      .stats-bar::-webkit-scrollbar { display: none; }
+      .stat { padding: 0 8px; border-right: 1px solid var(--border); flex-shrink: 0; }
+      .stat:first-child { padding-left: 0; }
+      .stat:last-child { padding-right: 0; border-right: none; }
+      .stat-value { font-size: 18px; }
+      .stat-label { font-size: 8px; }
+      .export-bar { padding: 0; flex-shrink: 0; }
+      .export-bar .btn { padding: 6px 12px; font-size: 10px; }
+
+      .container { padding: 12px 16px 60px; }
+      .poster-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+      .poster-category { top: 6px; left: 6px; padding: 2px 6px; font-size: 9px; }
+      .poster-date { display: none; }
+      .poster-overlay { padding: 10px; }
+      .poster-title { font-size: 12px; margin-bottom: 4px; }
+      .poster-meta { font-size: 10px; }
+
+      .month-header { padding: 20px 0 6px; }
+      .month-header h3 { font-size: 15px; }
+
+      .settings-drawer.open { padding: 12px 16px 16px; }
+      .settings-grid { grid-template-columns: 1fr; gap: 12px; }
+      .field input { font-size: 12px; padding: 6px 10px; }
+
+      .modal-header { flex-direction: column; gap: 12px; padding: 16px; }
+      .modal-cover { width: 70px; }
+      .modal { max-width: calc(100vw - 32px); }
+
+      .poster-export-dialog { padding: 20px; max-width: calc(100vw - 32px); max-height: 85vh; overflow-y: auto; }
+      .poster-export-dialog h3 { font-size: 18px; }
+      .poster-preview-wrap { padding: 12px; }
+      .poster-export-actions { flex-direction: column; gap: 8px; }
+      .poster-export-actions .btn { width: 100%; justify-content: center; }
+    }
+
+    @media (max-width: 480px) {
+      .poster-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .masthead-title { font-size: 22px; }
+      .sub-toolbar { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .sub-toolbar-right { width: 100%; justify-content: flex-start; }
+      .date-bar { flex-wrap: wrap; gap: 4px; }
+      .date-mode-group { width: 100%; border-right: none; border-bottom: 1px solid var(--border); margin-right: 0; padding-right: 0; padding-bottom: 6px; margin-bottom: 2px; }
+      .date-preset-group { width: 100%; }
+      .stats-bar { flex-direction: column; gap: 12px; align-items: stretch; }
+      .export-bar { width: 100%; justify-content: flex-start; margin-top: 4px; }
+    }
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-top">
+      <div class="masthead-inner">
+        <div class="masthead-left">
+          <div class="masthead-eyebrow">✦ Personal Collection ✦</div>
+          <h1 class="masthead-title">The Shelf</h1>
+          <p class="masthead-sub">Books, films, television, music &amp; games</p>
+          <div class="masthead-meta" id="mastheadMeta"></div>
+        </div>
+        <div class="masthead-right">
+          <div class="masthead-actions">
+            <button class="btn btn-text" id="settingsBtn" title="Settings">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </button>
+            <button class="btn btn-text" id="demoBtn" title="Demo">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"></path></svg>
+            </button>
+            <button class="btn btn-text" id="loadBtn" title="Load Data">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6"></path><path d="M2.5 12A10 10 0 0 1 9 4.1M22 12a10 10 0 0 1-13 9.9"></path></svg>
+              <span class="btn-label">Load Data</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-drawer" id="settingsDrawer">
+      <div class="settings-grid">
+        <div class="field">
+          <label>Instance URL</label>
+          <input type="text" id="instanceUrl" value="https://neodb.social" placeholder="https://neodb.social">
+        </div>
+        <div class="field">
+          <label>Access Token</label>
+          <input type="password" id="accessToken" placeholder="Paste your OAuth token">
+          <p class="field-hint">Settings → Developer → Create App</p>
+        </div>
+      </div>
+    </div>
+
+  <div class="toolbar">
+      <div class="filter-row" id="catFilterRow">
+        <button class="filter-chip active" data-cat="all">All</button>
+        <button class="filter-chip" data-cat="book">Books</button>
+        <button class="filter-chip" data-cat="movie">Films</button>
+        <button class="filter-chip" data-cat="tv">TV</button>
+        <button class="filter-chip" data-cat="music">Music</button>
+        <button class="filter-chip" data-cat="game">Games</button>
+      </div>
+      <div class="filter-row" id="statusFilterRow">
+        <button class="filter-chip active" data-status="all">All</button>
+        <button class="filter-chip" data-status="wishlist" id="chipWishlist">Wishlist</button>
+        <button class="filter-chip" data-status="progress" id="chipProgress">Progress</button>
+        <button class="filter-chip" data-status="complete" id="chipComplete">Complete</button>
+      </div>
+    </div>
+
+    <div class="sub-toolbar">
+      <div class="sub-toolbar-left" id="viewToggleRow">
+        <button class="view-chip active" id="viewGrouped">By Month</button>
+        <button class="view-chip" id="viewFlat">Flat</button>
+      </div>
+      <div class="sub-toolbar-right">
+        <!-- Date range moved to date-bar custom mode -->
+      </div>
+    </div>
+  </header>
+
+  <div class="date-bar" id="dateBar">
+    <div class="date-mode-group">
+      <button class="date-mode active" data-mode="yearmonth">By Year / Month</button>
+      <button class="date-mode" data-mode="season">By Season</button>
+      <button class="date-mode" data-mode="custom">Custom</button>
+    </div>
+    <div class="date-preset-group" id="yearmonthPresets">
+      <button class="date-preset active" data-preset="all">All Time</button>
+      <button class="date-preset" data-preset="this-month">This Month</button>
+      <button class="date-preset" data-preset="last-month">Last Month</button>
+      <button class="date-preset" data-preset="this-year">This Year</button>
+      <button class="date-preset" data-preset="last-year">Last Year</button>
+    </div>
+    <div class="date-preset-group hidden" id="seasonPresets">
+      <button class="date-preset" data-preset="spring">Spring</button>
+      <button class="date-preset" data-preset="summer">Summer</button>
+      <button class="date-preset" data-preset="autumn">Autumn</button>
+      <button class="date-preset" data-preset="winter">Winter</button>
+    </div>
+    <div class="date-preset-group hidden" id="customPresets">
+      <div class="date-range">
+        <input type="date" id="dateFrom">
+        <span>-</span>
+        <input type="date" id="dateTo">
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-bar" id="statsBar" style="display:none">
+    <div style="display:flex;gap:0;flex-wrap:wrap;">
+      <div class="stat"><span class="stat-value" id="statTotal">0</span><span class="stat-label">Total</span></div>
+      <div class="stat"><span class="stat-value" id="statBook">0</span><span class="stat-label">Books</span></div>
+      <div class="stat"><span class="stat-value" id="statMovie">0</span><span class="stat-label">Films</span></div>
+      <div class="stat"><span class="stat-value" id="statMusic">0</span><span class="stat-label">Music</span></div>
+      <div class="stat"><span class="stat-value" id="statAvg">-</span><span class="stat-label">Avg</span></div>
+    </div>
+    <div class="export-bar" id="exportBar" style="display:none">
+      <button class="btn btn-accent" id="exportBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export Poster
+      </button>
+    </div>
+  </div>
+
+  <main class="container" id="posterContainer">
+    <div id="loading" class="loading" style="display:none">
+      <div class="spinner">✦</div>
+      Loading your collection...
+    </div>
+    <div id="grid" class="poster-grid"></div>
+    <div id="empty" class="empty" style="display:none">
+      <h3>Your shelf is empty</h3>
+      <p>Connect your NeoDB account to see your collection, or try the demo data to preview the layout.</p>
+      <div class="empty-actions">
+        <button class="btn btn-solid" id="emptyLoadBtn">Connect NeoDB</button>
+        <button class="btn btn-outline" id="emptyDemoBtn">Try Demo</button>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="modal">
+    <div style="position:relative;max-width:480px;width:100%;">
+      <button class="modal-close" id="modalClose">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="modal" id="modalContent"></div>
+    </div>
+  </div>
+
+  <div class="poster-export-overlay" id="posterExportOverlay">
+    <div class="poster-export-dialog" style="max-width:960px;">
+      <h3>Poster Ready</h3>
+      <p>You can take a screenshot, or click Download for a PNG file.</p>
+      <div class="poster-preview-wrap" id="posterPreviewWrap"></div>
+      <div class="poster-export-actions">
+        <button class="btn btn-outline" id="posterExportClose">Close</button>
+        <button class="btn btn-accent" id="posterExportDownloadBtn">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const state = {
+      items: [],
+      filtered: [],
+      filterCat: 'all',
+      filterStatus: 'all',
+      datePreset: 'all',
+      dateFrom: '',
+      dateTo: '',
+      groupByMonth: true,
+      instance: localStorage.getItem('neodb_instance') || 'https://neodb.social',
+      token: localStorage.getItem('neodb_token') || '',
+      hasLoaded: false,
+    };
+
+    const statusLabels = { wishlist: 'Wishlist', progress: 'Progress', complete: 'Complete', dropped: 'Dropped' };
+    const catLabels = { book: 'Book', movie: 'Film', tv: 'TV', music: 'Music', game: 'Game', podcast: 'Podcast', performance: 'Performance' };
+    const catIcons = { book: '\u{1F4D6}', movie: '\u{1F3AC}', tv: '\u{1F4FA}', music: '\u{1F3B5}', game: '\u{1F3AE}', podcast: '\u{1F399}', performance: '\u{1F3AD}' };
+    const statusClasses = { wishlist: 'status-wishlist', progress: 'status-progress', complete: 'status-complete', dropped: 'status-dropped' };
+
+    const grid = document.getElementById('grid');
+    const loading = document.getElementById('loading');
+    const empty = document.getElementById('empty');
+    const statsBar = document.getElementById('statsBar');
+    const exportBar = document.getElementById('exportBar');
+    const settingsDrawer = document.getElementById('settingsDrawer');
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modalContent');
+    const toast = document.getElementById('toast');
+    const mastheadMeta = document.getElementById('mastheadMeta');
+    const posterExportOverlay = document.getElementById('posterExportOverlay');
+    const posterPreviewWrap = document.getElementById('posterPreviewWrap');
+    const posterExportDownloadBtn = document.getElementById('posterExportDownloadBtn');
+    const loadBtn = document.getElementById('loadBtn');
+
+    function showToast(msg, type = '') {
+      toast.textContent = msg;
+      toast.className = 'toast ' + type;
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function fmtDate(d) { return d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''; }
+    function fmtMonth(d) { return d ? new Date(d).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : ''; }
+    function monthKey(d) { if (!d) return ''; const dt = new Date(d); return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`; }
+
+    function getCoverStyle(title) {
+      const palettes = [
+        ['#e8e0d4','#c8b8a0'], ['#d8d4c8','#a8a090'], ['#ddd8cc','#b0a080'],
+        ['#e0d8cc','#c0a888'], ['#d4d0c4','#989080'], ['#e4dcd4','#b8a890'],
+      ];
+      const p = palettes[title.length % palettes.length];
+      return `background:linear-gradient(160deg,${p[0]},${p[1]}40);`;
+    }
+
+    function updateViewButtons() {
+      document.getElementById('viewGrouped').classList.toggle('active', state.groupByMonth);
+      document.getElementById('viewFlat').classList.toggle('active', !state.groupByMonth);
+    }
+
+    function getAuthPrefix() {
+      return String.fromCharCode(66) + 'earer' + ' ';
+    }
+
+    async function apiGet(path) {
+      const url = state.instance.replace(/\/$/, '') + path;
+      const res = await fetch(url, {
+        headers: { 'Authorization': getAuthPrefix() + state.token }
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`HTTP ${res.status}: ${text}`);
+      }
+      return res.json();
+    }
+
+    async function loadRecentMarks() {
+      const types = ['wishlist', 'progress', 'complete', 'dropped'];
+      const all = [];
+      for (const type of types) {
+        const data = await apiGet(`/api/me/shelf/${type}?page=1&page_size=50`);
+        if (data && data.data) all.push(...data.data);
+      }
+      return all;
+    }
+
+    async function loadAllMarks() {
+      const types = ['wishlist', 'progress', 'complete', 'dropped'];
+      const all = [];
+      for (const type of types) {
+        let page = 1;
+        while (true) {
+          const data = await apiGet(`/api/me/shelf/${type}?page=${page}&page_size=50`);
+          if (!data || !data.data || data.data.length === 0) break;
+          all.push(...data.data);
+          if (!data.pages || page >= data.pages) break;
+          page++;
+        }
+      }
+      return all;
+    }
+
+    function getPresetRange(preset) {
+      const now = new Date();
+      const y = now.getFullYear(), m = now.getMonth();
+      switch (preset) {
+        case 'this-month': return { from: new Date(y, m, 1), to: new Date(y, m + 1, 0, 23, 59, 59) };
+        case 'last-month': return { from: new Date(y, m - 1, 1), to: new Date(y, m, 0, 23, 59, 59) };
+        case 'this-year': return { from: new Date(y, 0, 1), to: new Date(y, 11, 31, 23, 59, 59) };
+        case 'last-year': return { from: new Date(y - 1, 0, 1), to: new Date(y - 1, 11, 31, 23, 59, 59) };
+        case 'spring': return { from: new Date(y, 2, 1), to: new Date(y, 5, 0, 23, 59, 59) };
+        case 'summer': return { from: new Date(y, 5, 1), to: new Date(y, 8, 0, 23, 59, 59) };
+        case 'autumn': return { from: new Date(y, 8, 1), to: new Date(y, 11, 0, 23, 59, 59) };
+        case 'winter': return { from: new Date(y, 11, 1), to: new Date(y + 1, 2, 0, 23, 59, 59) };
+        default: return null;
+      }
+    }
+
+    function getSubtitleFromStats(stats) {
+      const parts = [];
+      if (stats.book > 0) parts.push(stats.book + ' Book' + (stats.book > 1 ? 's' : ''));
+      if (stats.movie > 0) parts.push(stats.movie + ' Film' + (stats.movie > 1 ? 's' : ''));
+      if (stats.tv > 0) parts.push(stats.tv + ' TV Show' + (stats.tv > 1 ? 's' : ''));
+      if (stats.music > 0) parts.push(stats.music + ' Music' + (stats.music > 1 ? ' Albums' : ' Album'));
+      if (stats.game > 0) parts.push(stats.game + ' Game' + (stats.game > 1 ? 's' : ''));
+      return parts.length ? parts.join(' \u00b7 ') : 'Books, films, television, music & games';
+    }
+
+
+    function passesDateFilter(mark) {
+      const created = new Date(mark.created_time);
+      if (isNaN(created)) return true;
+      if (state.datePreset !== 'all') {
+        const r = getPresetRange(state.datePreset);
+        if (r) return created >= r.from && created <= r.to;
+      }
+      if (state.dateFrom) { const f = new Date(state.dateFrom); if (created < f) return false; }
+      if (state.dateTo) { const t = new Date(state.dateTo); t.setHours(23,59,59,999); if (created > t) return false; }
+      return true;
+    }
+
+    function getPosterTitle(items) {
+      if (items.length === 0) return 'The Shelf';
+
+      // Season preset titles
+      if (state.datePreset === 'spring') return 'Spring 2026';
+      if (state.datePreset === 'summer') return 'Summer 2026';
+      if (state.datePreset === 'autumn') return 'Autumn 2026';
+      if (state.datePreset === 'winter') return 'Winter 2026';
+
+      const dates = items.map(m => new Date(m.created_time)).filter(d => !isNaN(d));
+      if (dates.length === 0) return 'The Shelf';
+      dates.sort((a, b) => a - b);
+      const first = dates[0];
+      const last = dates[dates.length - 1];
+      const sameMonth = first.getFullYear() === last.getFullYear() && first.getMonth() === last.getMonth();
+      const sameYear = first.getFullYear() === last.getFullYear();
+      const fmt = (d) => d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).toUpperCase();
+      if (sameMonth) return fmt(first);
+      if (sameYear) {
+        const f = first.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+        const l = last.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+        return `${f}-${l} ${first.getFullYear()}`;
+      }
+      return `${first.getFullYear()}-${last.getFullYear()}`;
+    }
+
+    function renderGrid(items) {
+      state.filtered = items;
+      grid.innerHTML = '';
+      empty.style.display = items.length === 0 ? 'block' : 'none';
+      statsBar.style.display = items.length > 0 ? 'flex' : 'none';
+      exportBar.style.display = items.length > 0 ? 'flex' : 'none';
+
+      if (items.length === 0) return;
+
+      const stats = { total: items.length, book: 0, movie: 0, tv: 0, music: 0, game: 0, ratings: [] };
+      items.forEach(m => {
+        const cat = m.item?.category || 'other';
+        if (stats[cat] !== undefined) stats[cat]++;
+        if (m.rating_grade) stats.ratings.push(m.rating_grade);
+      });
+      document.getElementById('statTotal').textContent = stats.total;
+      document.getElementById('statBook').textContent = stats.book;
+      document.getElementById('statMovie').textContent = stats.movie + stats.tv;
+      document.getElementById('statMusic').textContent = stats.music;
+      document.getElementById('statAvg').textContent = stats.ratings.length ? (stats.ratings.reduce((a,b)=>a+b,0)/stats.ratings.length).toFixed(1) : '-';
+
+      items.sort((a, b) => new Date(b.created_time||0) - new Date(a.created_time||0));
+
+      let lastMonth = '';
+
+      items.forEach(mark => {
+        const item = mark.item || {};
+        const title = item.display_title || 'Unknown';
+        const cover = item.cover_image_url;
+        const cat = item.category || 'other';
+        const status = mark.shelf_type || 'wishlist';
+        const rating = mark.rating_grade || 0;
+        const dateStr = mark.created_time;
+        const mk = monthKey(dateStr);
+
+        if (state.groupByMonth && mk && mk !== lastMonth) {
+          lastMonth = mk;
+          const header = document.createElement('div');
+          header.className = 'month-header';
+          const count = items.filter(m => monthKey(m.created_time) === mk).length;
+          header.innerHTML = `<h3>${fmtMonth(dateStr)}</h3><span>${count} items</span>`;
+          grid.appendChild(header);
+        }
+
+        const card = document.createElement('div');
+        card.className = 'poster';
+        card.innerHTML = `
+          ${cover ? `<img class="poster-img" src="${cover}" alt="${title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : ''}
+          <div class="poster-placeholder" style="display:${cover?'none':'flex'};${getCoverStyle(title)}">
+            <span class="ph-icon">${catIcons[cat] || '\u{1F4E6}'}</span>
+            <span class="ph-text">${title}</span>
+          </div>
+          <span class="poster-category">${catLabels[cat] || cat}</span>
+          ${dateStr ? `<span class="poster-date">${fmtDate(dateStr)}</span>` : ''}
+          <div class="poster-overlay">
+            <div class="poster-title">${title}</div>
+            <div class="poster-meta">
+              ${rating ? `<span class="poster-rating"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>${rating}</span>` : ''}
+              <span class="poster-status ${statusClasses[status]}">${statusLabels[status] || status}</span>
+            </div>
+          </div>
+        `;
+        card.addEventListener('click', () => openModal(mark));
+        grid.appendChild(card);
+      });
+    }
+
+    function applyFilters() {
+      let items = state.items;
+      if (state.filterCat !== 'all') items = items.filter(m => (m.item?.category||'other') === state.filterCat);
+      if (state.filterStatus !== 'all') items = items.filter(m => m.shelf_type === state.filterStatus);
+      items = items.filter(passesDateFilter);
+      renderGrid(items);
+    }
+
+    function openModal(mark) {
+      const item = mark.item || {};
+      const title = item.display_title || 'Unknown';
+      const cover = item.cover_image_url;
+      const cat = item.category || 'other';
+      const status = mark.shelf_type || 'wishlist';
+      const rating = mark.rating_grade || 0;
+      const comment = mark.comment_text || '';
+      const tags = mark.tags || [];
+      const date = fmtDate(mark.created_time);
+      const avgRating = item.rating || 0;
+
+      modalContent.innerHTML = `
+        <div class="modal-header">
+          <div class="modal-cover">
+            ${cover ? `<img src="${cover}" alt="${title}" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=width:100%;height:100%;display:flex;align-items:center;justify-content:center;${getCoverStyle(title)}><span style=font-size:24px>${catIcons[cat]||'\u{1F4E6}'}</span></div>'">`
+              : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;${getCoverStyle(title)}"><span style="font-size:24px">${catIcons[cat]||'\u{1F4E6}'}</span></div>`}
+          </div>
+          <div class="modal-info">
+            <h2>${title}</h2>
+            <div class="modal-meta">
+              <span>${catLabels[cat] || cat}</span>
+              ${avgRating ? `<span class="modal-rating"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> ${avgRating} · ${item.rating_count||0} ratings</span>` : ''}
+              <span class="poster-status ${statusClasses[status]}">${statusLabels[status] || status}</span>
+            </div>
+            ${rating ? `<div class="modal-rating" style="margin-bottom:4px">Your rating: ${rating}/10</div>` : ''}
+            ${date ? `<div style="font-size:12px;color:var(--ink-muted)">Marked on ${date}</div>` : ''}
+          </div>
+        </div>
+        <div class="modal-body">
+          ${comment ? `<div class="modal-comment">${comment}</div>` : '<p style="color:var(--ink-muted);font-size:13px;margin-bottom:20px">No comment yet.</p>'}
+          ${tags.length ? `<div class="modal-tags">${tags.map(t => `<span class="modal-tag">${t}</span>`).join('')}</div>` : ''}
+        </div>
+      `;
+      modal.classList.add('open');
+    }
+
+    document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
+
+    // ====== Image proxy: load as base64 via optional CORS proxy ======
+
+    // Convert an img element's src to a base64 data URL using canvas
+    function convertImgToBase64(img) {
+      return new Promise(resolve => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth || img.width;
+          canvas.height = img.naturalHeight || img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          img.src = dataUrl;
+        } catch (e) {
+          console.log('[convert] failed:', e.message);
+        }
+        resolve();
+      });
+    }
+
+
+        function buildCell(mark) {
+            const item = mark.item || {};
+            const title = escapeHTML(item.display_title || 'Unknown');
+            const cover = item.cover_image_url;
+            const status = mark.shelf_type || 'wishlist';
+            const rating = mark.rating_grade || 0;
+            const cat = item.category || 'other';
+            const icon = catIcons[cat] || '\u{1F4E6}';
+            const star = rating ? '\u2605 ' + rating + ' \u00b7 ' : '';
+    
+            if (cover) {
+              const proxiedCover = 'https://images.weserv.nl/?url=' + encodeURIComponent(cover) + '&w=400&h=600&fit=cover';
+              return '<div class="poster-cell" style="width:100%;height:301px;overflow:hidden;position:relative;border-radius:8px;box-shadow:0 2px 8px rgba(60,40,20,0.10);" data-cover="' + escapeHTML(cover) + '">'
+                + '<img class="poster-cell-img" crossorigin="anonymous" src="' + proxiedCover + '" width="199" height="301" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+                + '<div style="display:none;width:100%;height:100%;background:#f0ebe4;align-items:flex-end;padding:14px;position:absolute;inset:0;">'
+                + '<div><div style="font-family:serif;font-size:13px;font-weight:600;color:#fff;margin-bottom:4px;line-height:1.35;">' + title + '</div>'
+                + '<div style="font-size:11px;color:rgba(255,255,255,0.65);">' + star + (statusLabels[status] || status) + '</div></div></div>'
+                + '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(42,34,24,0.85),rgba(42,34,24,0.30) 50%,transparent 70%);pointer-events:none;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;">'
+                + '<div style="font-family:serif;font-size:13px;font-weight:600;color:#fff;line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + title + '</div>'
+                + '<div style="font-size:11px;color:rgba(255,255,255,0.65);margin-top:4px;">' + star + (statusLabels[status] || status) + '</div>'
+                + '</div></div>';
+            }
+            return '<div style="width:100%;height:301px;background:#f0ebe4;display:flex;flex-direction:column;justify-content:flex-end;border-radius:8px;padding:14px;position:relative;">'
+              + '<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:36px;opacity:0.25;">' + icon + '</span>'
+              + '<div style="font-family:serif;font-size:13px;font-weight:600;color:#fff;line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + title + '</div>'
+              + '<div style="font-size:11px;color:rgba(255,255,255,0.65);margin-top:4px;">' + star + (statusLabels[status] || status) + '</div>'
+              + '</div>';
+    
+    async function exportPoster() {
+      if (state.filtered.length === 0) {
+        showToast('Nothing to export', 'error');
+        return;
+      }
+
+      document.getElementById('exportBtn').disabled = true;
+
+      const filteredItems = state.filtered;
+      const items = filteredItems.slice(0, 12);
+
+      const stats = { total: filteredItems.length, book: 0, movie: 0, tv: 0, music: 0, game: 0, ratings: [] };
+      filteredItems.forEach(m => {
+        const cat = m.item?.category || 'other';
+        if (stats[cat] !== undefined) stats[cat]++;
+        if (m.rating_grade) stats.ratings.push(m.rating_grade);
+      });
+
+      // Build poster with original image URLs (works immediately, no proxy needed for display)
+      const posterTitle = getPosterTitle(filteredItems);
+      const subParts = [];
+      if (state.filterCat !== 'all') subParts.push(catLabels[state.filterCat] || state.filterCat);
+      if (state.filterStatus !== 'all') subParts.push(statusLabels[state.filterStatus] || state.filterStatus);
+      const posterSubtitle = subParts.length ? subParts.join(' \u00b7 ') : getSubtitleFromStats(stats);
+      }
+
+      const cells = items.map(buildCell);
+      const rowCount = Math.max(4, Math.ceil(items.length / 4) * 4);
+      for (let i = items.length; i < rowCount; i++) {
+        cells.push('<div style="width:100%;height:301px;background:rgba(255,255,255,0.03);"></div>');
+      }
+
+      const statDefs = [
+        { label: 'TOTAL', value: stats.total },
+        stats.book > 0 ? { label: 'BOOKS', value: stats.book } : null,
+        stats.movie > 0 ? { label: 'FILMS', value: stats.movie } : null,
+        stats.tv > 0 ? { label: 'TV', value: stats.tv } : null,
+        stats.music > 0 ? { label: 'MUSIC', value: stats.music } : null,
+        stats.game > 0 ? { label: 'GAMES', value: stats.game } : null,
+        stats.ratings.length ? { label: 'AVG', value: (stats.ratings.reduce((a,b)=>a+b,0)/stats.ratings.length).toFixed(1) } : null,
+      ].filter(s => s !== null);
+
+      const footerStatHTML = statDefs.map(s =>
+        '<div style="text-align:right;"><div style="font-family:serif;font-size:22px;font-weight:600;color:#2a2218;line-height:1;">' + s.value + '</div><div style="font-size:9px;color:#c09578;text-transform:uppercase;letter-spacing:1.5px;margin-top:2px;">' + s.label + '</div></div>'
+      ).join('');
+
+            // Scale BEFORE opening the overlay to prevent flash of unstyled content.
+      // Use transform: scale() for broad browser compatibility (zoom is non-standard).
+      const posterHTML = '<div id="poster-render-target" style="background:#faf7f2;color:#2a2218;font-family:Inter,-apple-system,sans-serif;width:900px;overflow:hidden;">'
+        + '<div style="padding:48px 48px 32px;position:relative;">'
+        + '<div style="position:absolute;top:32px;right:48px;font-size:72px;opacity:0.06;pointer-events:none;line-height:1;">*</div>'
+        + '<div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#c09578;margin-bottom:14px;">*  NEODB PERSONAL ARCHIVE</div>'
+        + '<div style="font-family:\'Playfair Display\',Georgia,serif;font-size:54px;font-weight:700;line-height:1.05;margin-bottom:10px;color:#2a2218;">' + escapeHTML(posterTitle) + '</div>'
+        + '<div style="font-family:\'Playfair Display\',Georgia,serif;font-size:16px;font-style:italic;color:#a08060;margin-bottom:22px;">' + escapeHTML(posterSubtitle) + '</div>'
+        + '<div style="width:64px;height:3px;background:linear-gradient(to right,#d4956a,#e8b89d);border-radius:2px;"></div>'
+        + '</div>'
+        + '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 48px 48px;">' + cells.join('') + '</div>'
+        + '<div style="padding:20px 48px;border-top:1px solid rgba(180,140,100,0.18);display:flex;justify-content:space-between;align-items:center;">'
+        + '<div style="font-size:11px;color:#c09578;letter-spacing:1.5px;text-transform:uppercase;">* GENERATED FROM NEODB</div>'
+        + '<div style="display:flex;gap:24px;">' + footerStatHTML + '</div>'
+        + '</div></div>';posterPreviewWrap.innerHTML = posterHTML;
+
+      // Apply zoom BEFORE opening the overlay to prevent flash of unstyled content
+      const target = posterPreviewWrap.querySelector('#poster-render-target');
+      if (target) {
+        const wrapW = posterPreviewWrap.clientWidth - 24;
+        const scale = Math.min(wrapW / 900, 1);
+        target.style.transform = 'scale(' + scale + ')';
+        target.style.transformOrigin = 'top left';
+      }
+
+      posterExportOverlay.classList.add('open');
+
+      posterExportDownloadBtn.onclick = async () => {
+        posterExportDownloadBtn.textContent = 'Rendering...';
+        posterExportDownloadBtn.disabled = true;
+
+        try {
+          const W = 900;
+          const COLS = 4;
+          const GAP = 10;
+          const PADDING = 48;
+          const CELL_H = 301;
+          const GRID_W = W - PADDING * 2;
+          const COL_W = (GRID_W - GAP * (COLS - 1)) / COLS;
+          const ROW_H = CELL_H;
+
+          const filteredItems = state.filtered.slice(0, 12);
+          const stats = { total: state.filtered.length, book: 0, movie: 0, tv: 0, music: 0, game: 0, ratings: [] };
+          state.filtered.forEach(m => {
+            const cat = m.item?.category || 'other';
+            if (stats[cat] !== undefined) stats[cat]++;
+            if (m.rating_grade) stats.ratings.push(m.rating_grade);
+          });
+
+          const posterTitle = getPosterTitle(state.filtered);
+          const subParts = [];
+          if (state.filterCat !== 'all') subParts.push(catLabels[state.filterCat] || state.filterCat);
+          if (state.filterStatus !== 'all') subParts.push(statusLabels[state.filterStatus] || state.filterStatus);
+          const posterSubtitle = subParts.length ? subParts.join(' · ') : getSubtitleFromStats(stats);
+
+          // Dynamically compute header content height from font metrics.
+          // Layout mirrors the DOM header div:
+          //   padding: 48px 48px 32px
+          //   label:    font-size 10px, margin-bottom 14px
+          //   title:    font-size 54px bold serif, margin-bottom 10px
+          //   subtitle: font-size 16px italic serif, margin-bottom 22px
+          //   line:     height 3px
+          // Use 1.1× line-height factor for bold 54px serif and 1.3× for italic 16px.
+          const titleH   = 54 * 1.1;   // ~59px
+          const subH     = 16 * 1.3;   // ~21px
+          const labelH   = 10 * 1.4;   // ~14px
+          // Sum of all vertical extents in the header content area
+          const headerContentH = 14 + labelH + 10 + titleH + 22 + subH + 3;
+
+          // Grid rows
+          const rowCount = Math.ceil(filteredItems.length / COLS);
+          const gridH = rowCount * ROW_H + (rowCount - 1) * GAP;
+
+          // Total height: top padding + header content + header-bottom padding + grid + footer padding(20) + footer content(56) + bottom padding(20)
+          const totalH = 48 + headerContentH + 32 + gridH + 20 + 56 + 20;
+
+          const canvas = document.createElement('canvas');
+          canvas.width = W * 2;
+          canvas.height = totalH * 2;
+          const ctx = canvas.getContext('2d');
+          ctx.scale(2, 2);
+
+          // Background
+          ctx.fillStyle = '#faf7f2';
+          ctx.fillRect(0, 0, W, totalH);
+
+          // --- HEADER (mirrors DOM: padding:48px 48px 32px inside poster) ---
+          // DOM label: margin-bottom=14px → Y=48+14=62
+          // DOM title: font=54px Playfair, margin-bottom=10px → baseline=48+14+54=116
+          // DOM subtitle: font=16px, margin-bottom=22px → baseline=48+14+54+10+16=150
+          // DOM line: 3px, at subtitle baseline+10=160 → line top=160, bottom=163
+          const labelY = 48 + 14; // 62: matches DOM label baseline
+          const titleBaseline = 48 + 14 + 54; // 116
+          const subtitleBaseline = titleBaseline + 10 + 16; // 142
+          const accentY = subtitleBaseline + 22; // 164: matches DOM subtitle margin-bottom=22
+          const starY = 48 + 32; // 80
+
+          // Top label "* NEODB PERSONAL ARCHIVE"
+          ctx.font = '10px sans-serif';
+          ctx.fillStyle = '#c09578';
+          ctx.fillText('\u2726  \u2500 \u00b7 \u2500  \u2726', PADDING, labelY);
+
+          ctx.save();
+          ctx.font = 'bold 54px Georgia, serif'; // Playfair ~54px
+          ctx.fillStyle = '#2a2218';
+          ctx.fillText(posterTitle, PADDING, titleBaseline);
+          ctx.restore();
+
+          ctx.font = 'italic 16px Georgia, serif';
+          ctx.fillStyle = '#a08060';
+          ctx.fillText(posterSubtitle, PADDING, subtitleBaseline);
+
+          // Accent line
+          ctx.fillStyle = '#d4956a';
+          ctx.fillRect(PADDING, accentY, 64, 3);
+
+          // Big decorative star (top right, inside header div)
+          ctx.font = '72px serif';
+          ctx.fillStyle = 'rgba(42,34,24,0.06)';
+          ctx.fillText('✦', W - PADDING - 48, starY + 50);
+
+          const gridY = 48 + headerContentH + 32; // top padding + header area + bottom padding
+
+          // Load images
+          const loadImage = (src, timeoutMs = 6000) => new Promise(resolve => {
+            if (!src) { resolve(null); return; }
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            let settled = false;
+            const settle = (val) => { if (!settled) { settled = true; resolve(val); } };
+            img.onload = () => settle(img);
+            img.onerror = () => settle(null);
+            setTimeout(() => settle(null), timeoutMs);
+            img.src = src;
+          });
+
+          const cellData = filteredItems.slice(0, 12).map((mark, i) => {
+            const col = i % COLS;
+            const row = Math.floor(i / COLS);
+            const x = PADDING + col * (COL_W + GAP);
+            const y = gridY + row * (ROW_H + GAP);
+            const item = mark.item || {};
+            const title = item.display_title || '';
+            const cover = item.cover_image_url;
+            const rating = mark.rating_grade || 0;
+            const status = mark.shelf_type || 'wishlist';
+            const cat = item.category || 'other';
+            const star = rating ? '★ ' + rating + ' · ' : '';
+            const statusLabel = statusLabels[status] || status;
+
+            let proxiedSrc = null;
+            if (cover) {
+              proxiedSrc = 'https://images.weserv.nl/?url=' + encodeURIComponent(cover) + '&w=400&h=600&fit=cover';
+            }
+            return { x, y, w: COL_W, h: ROW_H, proxiedSrc, title, star, statusLabel, cat, rating, item };
+          });
+
+          const images = await Promise.all(cellData.map(d => loadImage(d.proxiedSrc)));
+
+          // Draw cells
+          cellData.forEach((d, i) => {
+            const img = images[i];
+
+            // Cell background / shadow
+            ctx.shadowColor = 'rgba(60,40,20,0.10)';
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetY = 2;
+            ctx.fillStyle = '#f0ebe4';
+            ctx.beginPath();
+            roundRect(ctx, d.x, d.y, d.w, d.h, 8);
+            ctx.fill();
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetY = 0;
+
+            // Cover image
+            if (img) {
+              // Draw image with object-fit: cover logic
+              const imgAR = img.width / img.height;
+              const cellAR = d.w / d.h;
+              let sx = 0, sy = 0, sw = img.width, sh = img.height;
+              if (imgAR > cellAR) {
+                sw = img.height * cellAR;
+                sx = (img.width - sw) / 2;
+              } else {
+                sh = img.width / cellAR;
+                sy = (img.height - sh) / 2;
+              }
+              ctx.save();
+              ctx.beginPath();
+              roundRect(ctx, d.x, d.y, d.w, d.h, 8);
+              ctx.clip();
+              ctx.drawImage(img, sx, sy, sw, sh, d.x, d.y, d.w, d.h);
+              ctx.restore();
+            } else {
+              // Fallback: show icon centered
+              ctx.font = '36px serif';
+              ctx.fillStyle = 'rgba(42,34,24,0.25)';
+              ctx.textAlign = 'center';
+              ctx.fillText(catIcons[d.cat] || '📦', d.x + d.w / 2, d.y + d.h / 2 + 12);
+              ctx.textAlign = 'left';
+            }
+
+            // Overlay gradient
+            const grad = ctx.createLinearGradient(d.x, d.y + d.h * 0.3, d.x, d.y + d.h);
+            grad.addColorStop(0, 'rgba(42,34,24,0)');
+            grad.addColorStop(0.5, 'rgba(42,34,24,0.30)');
+            grad.addColorStop(1, 'rgba(42,34,24,0.85)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            roundRect(ctx, d.x, d.y, d.w, d.h, 8);
+            ctx.fill();
+
+            // Clip overlay to rounded rect
+            ctx.save();
+            ctx.beginPath();
+            roundRect(ctx, d.x, d.y, d.w, d.h, 8);
+            ctx.clip();
+
+            // Text: title (max 2 lines)
+            ctx.fillStyle = '#fff';
+            ctx.font = '600 13px sans-serif';
+            const maxW = d.w - 28;
+            const titleLines = wrapText(ctx, d.title, maxW, 2);
+            titleLines.forEach((line, li) => {
+              ctx.fillText(line, d.x + 14, d.y + d.h - 42 + li * 17);
+            });
+
+            // Text: rating + status
+            ctx.font = '11px sans-serif';
+            ctx.fillStyle = 'rgba(255,255,255,0.65)';
+            ctx.fillText(d.star + d.statusLabel, d.x + 14, d.y + d.h - 14);
+
+            ctx.restore();
+          });
+
+          // Footer — DOM: padding:20px, label RIGHT, stats LEFT, divider in middle
+          const footerY = gridY + gridH + 20; // 20px padding-top matching DOM
+          const footerContentH = 56;
+
+          // Label text on the right (DOM: right flex child)
+          ctx.font = '11px sans-serif';
+          ctx.fillStyle = '#c09578';
+          ctx.textAlign = 'right';
+          ctx.fillText('✦ NEODB PERSONAL ARCHIVE', W - PADDING, footerY + 36);
+          ctx.textAlign = 'left';
+
+          // Divider line
+          ctx.fillStyle = 'rgba(180,140,100,0.18)';
+          ctx.fillRect(PADDING, footerY, W - PADDING * 2, 1);
+
+          // Stats right aligned
+          const statDefs = [
+            { label: 'TOTAL', value: stats.total },
+            stats.book > 0 ? { label: 'BOOKS', value: stats.book } : null,
+            stats.movie > 0 ? { label: 'FILMS', value: stats.movie } : null,
+            stats.tv > 0 ? { label: 'TV', value: stats.tv } : null,
+            stats.music > 0 ? { label: 'MUSIC', value: stats.music } : null,
+            stats.game > 0 ? { label: 'GAMES', value: stats.game } : null,
+            stats.ratings.length ? { label: 'AVG', value: (stats.ratings.reduce((a, b) => a + b, 0) / stats.ratings.length).toFixed(1) } : null,
+          ].filter(s => s !== null);
+
+          // Stats LEFT — measure, then draw each block at fixed left positions
+          const statBlocks = statDefs.map(s => {
+            ctx.font = 'bold 22px Georgia, serif';
+            const vw = ctx.measureText(String(s.value)).width;
+            ctx.font = '9px sans-serif';
+            const lw = ctx.measureText(s.label).width;
+            return { value: s.value, label: s.label, w: Math.max(vw, lw) };
+          });
+          const statGap = 24;
+          let statX = PADDING;
+          statBlocks.forEach((b) => {
+            // Value: 22px bold, give more breathing room below divider
+            ctx.font = 'bold 22px Georgia, serif';
+            ctx.fillStyle = '#2a2218';
+            ctx.fillText(String(b.value), statX, footerY + 30); // was +22, now +30
+            // Label: 9px uppercase, 4px gap below value
+            ctx.font = '9px sans-serif';
+            ctx.fillStyle = '#c09578';
+            ctx.fillText(b.label, statX, footerY + 30 + 9 + 4); // was +33, now +43
+            statX += b.w + statGap;
+          });
+
+          canvas.toBlob(blob => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'the-shelf.png';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Downloaded!', 'success');
+          }, 'image/png');
+
+        } catch (e) {
+          showToast('Export failed: ' + e.message, 'error');
+          console.error(e);
+        } finally {
+          posterExportDownloadBtn.textContent = 'Download PNG';
+          posterExportDownloadBtn.disabled = false;
+        }
+      };
+
+      posterExportOverlay.classList.add('open');
+
+      // Re-apply scale after layout settles (e.g. image load changes height)
+      setTimeout(() => {
+        const target = posterPreviewWrap.querySelector('#poster-render-target');
+        if (!target) return;
+        const wrapW = posterPreviewWrap.clientWidth - 24;
+        const scale = Math.min(wrapW / 900, 1);
+        target.style.transform = 'scale(' + scale + ')';
+        target.style.transformOrigin = 'top left';
+      }, 200);
+
+      document.getElementById('exportBtn').disabled = false;
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+    }
+
+    function wrapText(ctx, text, maxWidth, maxLines) {
+      const lines = [];
+      let remaining = text;
+      for (let l = 0; l < maxLines; l++) {
+        if (!remaining) break;
+        let cut = remaining;
+        while (ctx.measureText(cut).width > maxWidth && cut.length > 0) cut = cut.slice(0, -1);
+        if (!cut) break;
+        lines.push(cut);
+        remaining = remaining.slice(cut.length).trim();
+      }
+      return lines;
+    }
+
+    function escapeHTML(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+
+
+
+    document.getElementById('exportBtn').addEventListener('click', exportPoster);
+    document.getElementById('posterExportClose').addEventListener('click', () => posterExportOverlay.classList.remove('open'));
+    posterExportOverlay.addEventListener('click', e => { if (e.target === posterExportOverlay) posterExportOverlay.classList.remove('open'); });
+
+    document.getElementById('settingsBtn').addEventListener('click', () => {
+      settingsDrawer.classList.toggle('open');
+    });
+
+    document.getElementById('instanceUrl').value = state.instance;
+    document.getElementById('accessToken').value = state.token;
+    async function doLoad(full = false) {
+      state.instance = document.getElementById('instanceUrl').value.trim();
+      state.token = document.getElementById('accessToken').value.trim();
+      localStorage.setItem('neodb_instance', state.instance);
+      localStorage.setItem('neodb_token', state.token);
+
+      if (!state.token) {
+        showToast('Please enter your Access Token', 'error');
+        settingsDrawer.classList.add('open');
+        return;
+      }
+
+      loading.style.display = 'flex';
+      grid.innerHTML = '';
+      empty.style.display = 'none';
+      loadBtn.disabled = true;
+      loadBtn.querySelector('.btn-label').textContent = full ? 'Loading...' : 'Loading (Recent)...';
+
+      try {
+        const me = await apiGet('/api/me');
+        const name = me.display_name || me.external_acct || 'NeoDB User';
+        mastheadMeta.textContent = `Signed in as ${name}`;
+        showToast(`Connected as ${name}`, 'success');
+
+        state.items = await loadRecentMarks();
+        state.hasLoaded = true;
+        loading.style.display = 'none';
+        applyFilters();
+        showToast(`Loaded ${state.items.length} recent items. Click Load Data again for all.`, 'success');
+
+        if (full) {
+          loadBtn.querySelector('.btn-label').textContent = 'Loading all...';
+          const allItems = await loadAllMarks();
+          state.items = allItems;
+          applyFilters();
+          showToast(`Loaded all ${allItems.length} items`, 'success');
+        }
+      } catch (err) {
+        loading.style.display = 'none';
+        showToast('Failed to load: ' + err.message, 'error');
+        console.error(err);
+      } finally {
+        loadBtn.disabled = false;
+        loadBtn.querySelector('.btn-label').textContent = 'Load Data';
+      }
+    }
+
+    document.getElementById('loadBtn').addEventListener('click', () => doLoad(state.hasLoaded));
+    document.getElementById('emptyLoadBtn').addEventListener('click', () => {
+      settingsDrawer.classList.add('open');
+      document.getElementById('accessToken').focus();
+    });
+
+    // Demo mock data
+    const demoData = [
+      { shelf_type: 'complete', created_time: '2026-06-10T10:00:00Z', rating_grade: 8, item: { display_title: 'Dune: Part Two', category: 'movie', cover_image_url: 'https://neodb.social/media/cover/dune2.jpg', rating: 8.2, rating_count: 1250 } },
+      { shelf_type: 'complete', created_time: '2026-06-08T14:30:00Z', rating_grade: 9, item: { display_title: 'The Three-Body Problem', category: 'book', cover_image_url: '', rating: 8.8, rating_count: 3200 } },
+      { shelf_type: 'progress', created_time: '2026-06-05T20:00:00Z', rating_grade: 0, item: { display_title: 'Oppenheimer', category: 'movie', cover_image_url: '', rating: 8.5, rating_count: 890 } },
+      { shelf_type: 'complete', created_time: '2026-05-28T16:00:00Z', rating_grade: 7, item: { display_title: 'Past Lives', category: 'movie', cover_image_url: '', rating: 7.8, rating_count: 450 } },
+      { shelf_type: 'wishlist', created_time: '2026-05-20T09:00:00Z', rating_grade: 0, item: { display_title: 'The Wind-Up Bird Chronicle', category: 'book', cover_image_url: '', rating: 8.4, rating_count: 1800 } },
+      { shelf_type: 'complete', created_time: '2026-05-15T11:00:00Z', rating_grade: 8, item: { display_title: 'Blonde', category: 'music', cover_image_url: '', rating: 8.6, rating_count: 5600 } },
+      { shelf_type: 'progress', created_time: '2026-05-10T18:00:00Z', rating_grade: 0, item: { display_title: 'Severance', category: 'tv', cover_image_url: '', rating: 8.7, rating_count: 720 } },
+      { shelf_type: 'complete', created_time: '2026-04-22T13:00:00Z', rating_grade: 9, item: { display_title: 'Everything Everywhere All at Once', category: 'movie', cover_image_url: '', rating: 8.9, rating_count: 2100 } },
+      { shelf_type: 'complete', created_time: '2026-04-15T10:00:00Z', rating_grade: 7, item: { display_title: 'Norwegian Wood', category: 'book', cover_image_url: '', rating: 7.9, rating_count: 2800 } },
+      { shelf_type: 'wishlist', created_time: '2026-04-01T08:00:00Z', rating_grade: 0, item: { display_title: 'Elden Ring', category: 'game', cover_image_url: '', rating: 9.0, rating_count: 4500 } },
+      { shelf_type: 'complete', created_time: '2026-03-20T15:00:00Z', rating_grade: 8, item: { display_title: 'Anatomy of a Fall', category: 'movie', cover_image_url: '', rating: 8.3, rating_count: 380 } },
+      { shelf_type: 'dropped', created_time: '2026-03-10T12:00:00Z', rating_grade: 4, item: { display_title: 'The Flash', category: 'tv', cover_image_url: '', rating: 5.2, rating_count: 1200 } },
+    ];
+
+    document.getElementById('demoBtn').addEventListener('click', () => {
+      state.items = JSON.parse(JSON.stringify(demoData));
+      state.hasLoaded = true;
+      mastheadMeta.textContent = 'Demo mode';
+      settingsDrawer.classList.remove('open');
+      applyFilters();
+      showToast('Demo data loaded (12 items)', 'success');
+    });
+
+    document.getElementById('emptyDemoBtn').addEventListener('click', () => {
+      state.items = JSON.parse(JSON.stringify(demoData));
+      state.hasLoaded = true;
+      mastheadMeta.textContent = 'Demo mode';
+      applyFilters();
+      showToast('Demo data loaded (12 items)', 'success');
+    });
+
+    document.querySelectorAll('[data-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-cat]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.filterCat = btn.dataset.cat;
+        applyFilters();
+      });
+    });
+
+    document.querySelectorAll('[data-status]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-status]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.filterStatus = btn.dataset.status;
+        applyFilters();
+      });
+    });
+
+    document.querySelectorAll('[data-preset]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Only handle visible preset buttons
+        if (btn.closest('.date-preset-group.hidden')) return;
+        btn.closest('.date-preset-group').querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.datePreset = btn.dataset.preset;
+        if (state.datePreset !== 'all') {
+          document.getElementById('dateFrom').value = '';
+          document.getElementById('dateTo').value = '';
+          state.dateFrom = ''; state.dateTo = '';
+        }
+        applyFilters();
+      });
+    });
+
+    // Date mode switching
+    document.querySelectorAll('[data-mode]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const mode = btn.dataset.mode;
+        document.getElementById('yearmonthPresets').classList.toggle('hidden', mode !== 'yearmonth');
+        document.getElementById('seasonPresets').classList.toggle('hidden', mode !== 'season');
+        document.getElementById('customPresets').classList.toggle('hidden', mode !== 'custom');
+        // Reset active preset when switching modes
+        if (mode === 'yearmonth') {
+          state.datePreset = 'all';
+          document.querySelectorAll('#yearmonthPresets [data-preset]').forEach(b => b.classList.remove('active'));
+          document.querySelector('#yearmonthPresets [data-preset="all"]').classList.add('active');
+        } else if (mode === 'season') {
+          state.datePreset = 'spring';
+          document.querySelectorAll('#seasonPresets [data-preset]').forEach(b => b.classList.remove('active'));
+          document.querySelector('#seasonPresets [data-preset="spring"]').classList.add('active');
+        } else {
+          state.datePreset = 'all';
+        }
+        applyFilters();
+      });
+    });
+
+    document.getElementById('dateFrom').addEventListener('change', e => {
+      state.dateFrom = e.target.value;
+      if (state.dateFrom) {
+        document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
+        state.datePreset = 'all';
+      }
+      applyFilters();
+    });
+
+    document.getElementById('dateTo').addEventListener('change', e => {
+      state.dateTo = e.target.value;
+      if (state.dateTo) {
+        document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
+        state.datePreset = 'all';
+      }
+      applyFilters();
+    });
+
+    document.getElementById('viewGrouped').addEventListener('click', () => {
+      state.groupByMonth = true;
+      updateViewButtons();
+      applyFilters();
+    });
+    document.getElementById('viewFlat').addEventListener('click', () => {
+      state.groupByMonth = false;
+      updateViewButtons();
+      applyFilters();
+    });
+
+    state.groupByMonth = true;
+    updateViewButtons();
+    if (state.token) {
+      doLoad(false);
+    } else {
+      empty.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
