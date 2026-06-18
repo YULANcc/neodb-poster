@@ -959,7 +959,7 @@
       .stat-value { font-size: 18px; }
       .stat-label { font-size: 8px; }
       .export-bar { padding: 0; flex-shrink: 0; }
-      .export-bar .btn { padding: 6px 12px; font-size: 10px; }
+      .export-bar .btn { padding: 7px 16px; font-size: 12px; font-weight: 500; border-radius: var(--radius-lg); }
 
       .container { padding: 12px 16px 60px; }
       .poster-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -1017,9 +1017,6 @@
             <button class="btn btn-text" id="settingsBtn" title="Settings">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
             </button>
-            <button class="btn btn-text" id="demoBtn" title="Demo">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"></path></svg>
-            </button>
             <button class="btn btn-text" id="loadBtn" title="Load Data">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6"></path><path d="M2.5 12A10 10 0 0 1 9 4.1M22 12a10 10 0 0 1-13 9.9"></path></svg>
               <span class="btn-label">Load Data</span>
@@ -1040,23 +1037,26 @@
           <input type="password" id="accessToken" placeholder="Paste your OAuth token">
           <p class="field-hint">Settings → Developer → Create App</p>
         </div>
+        <div class="field" style="grid-column:1/-1">
+          <button class="btn btn-outline" id="settingsDemoBtn" style="width:100%;justify-content:center">Try Demo Data</button>
+        </div>
       </div>
     </div>
 
   <div class="toolbar">
       <div class="filter-row" id="catFilterRow">
         <button class="filter-chip active" data-cat="all">All</button>
-        <button class="filter-chip" data-cat="book">Books</button>
-        <button class="filter-chip" data-cat="movie">Films</button>
-        <button class="filter-chip" data-cat="tv">TV</button>
-        <button class="filter-chip" data-cat="music">Music</button>
-        <button class="filter-chip" data-cat="game">Games</button>
+        <button class="filter-chip" data-cat="book">📚 Books</button>
+        <button class="filter-chip" data-cat="movie">🎬 Films</button>
+        <button class="filter-chip" data-cat="tv">📺 TV</button>
+        <button class="filter-chip" data-cat="music">🎵 Music</button>
+        <button class="filter-chip" data-cat="game">🎮 Games</button>
       </div>
       <div class="filter-row" id="statusFilterRow">
         <button class="filter-chip active" data-status="all">All</button>
-        <button class="filter-chip" data-status="wishlist" id="chipWishlist">Wishlist</button>
-        <button class="filter-chip" data-status="progress" id="chipProgress">Progress</button>
-        <button class="filter-chip" data-status="complete" id="chipComplete">Complete</button>
+        <button class="filter-chip" data-status="wishlist" id="chipWishlist">☆ Wishlist</button>
+        <button class="filter-chip" data-status="progress" id="chipProgress">◑ Progress</button>
+        <button class="filter-chip" data-status="complete" id="chipComplete">✓ Complete</button>
       </div>
     </div>
 
@@ -1126,7 +1126,6 @@
       <p>Connect your NeoDB account to see your collection, or try the demo data to preview the layout.</p>
       <div class="empty-actions">
         <button class="btn btn-solid" id="emptyLoadBtn">Connect NeoDB</button>
-        <button class="btn btn-outline" id="emptyDemoBtn">Try Demo</button>
       </div>
     </div>
   </main>
@@ -1961,19 +1960,11 @@
       { shelf_type: 'dropped', created_time: '2026-03-10T12:00:00Z', rating_grade: 4, item: { display_title: 'The Flash', category: 'tv', cover_image_url: '', rating: 5.2, rating_count: 1200 } },
     ];
 
-    document.getElementById('demoBtn').addEventListener('click', () => {
+    document.getElementById('settingsDemoBtn').addEventListener('click', () => {
       state.items = JSON.parse(JSON.stringify(demoData));
       state.hasLoaded = true;
       mastheadMeta.textContent = 'Demo mode';
       settingsDrawer.classList.remove('open');
-      applyFilters();
-      showToast('Demo data loaded (12 items)', 'success');
-    });
-
-    document.getElementById('emptyDemoBtn').addEventListener('click', () => {
-      state.items = JSON.parse(JSON.stringify(demoData));
-      state.hasLoaded = true;
-      mastheadMeta.textContent = 'Demo mode';
       applyFilters();
       showToast('Demo data loaded (12 items)', 'success');
     });
