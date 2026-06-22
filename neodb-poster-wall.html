@@ -1496,7 +1496,7 @@
       document.getElementById('exportBtn').disabled = true;
 
       const filteredItems = state.filtered;
-      const items = filteredItems.slice(0, 12);
+      const items = filteredItems.slice(0, 20);
 
       const stats = { total: filteredItems.length, book: 0, movie: 0, tv: 0, music: 0, game: 0, ratings: [] };
       filteredItems.forEach(m => {
@@ -1578,7 +1578,7 @@
           const COL_W = (GRID_W - GAP * (COLS - 1)) / COLS;
           const ROW_H = CELL_H;
 
-          const filteredItems = state.filtered.slice(0, 12);
+          const filteredItems = state.filtered.slice(0, 20);
           const stats = { total: state.filtered.length, book: 0, movie: 0, tv: 0, music: 0, game: 0, ratings: [] };
           state.filtered.forEach(m => {
             const cat = m.item?.category || 'other';
@@ -1673,7 +1673,7 @@
             img.src = src;
           });
 
-          const cellData = filteredItems.slice(0, 12).map((mark, i) => {
+          const cellData = filteredItems.slice(0, 20).map((mark, i) => {
             const col = i % COLS;
             const row = Math.floor(i / COLS);
             const x = PADDING + col * (COL_W + GAP);
