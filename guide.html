@@ -1,0 +1,244 @@
+<!doctype html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Shelf - 使用指南</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #faf7f2;
+    --fg: #2a2218;
+    --muted: #a08060;
+    --line: #d4c4a8;
+    --neutral: #f0ebe4;
+    --input: #e8ddd0;
+    --process: #d4956a;
+    --storage: #c09578;
+    --external: #e8b89d;
+    --accent: #c45c3e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1612;
+      --fg: #e8ddd0;
+      --muted: #a08060;
+      --line: #4a3e30;
+      --neutral: #2a2218;
+      --input: #3a3028;
+      --process: #8b5e3c;
+      --storage: #6b4e38;
+      --external: #5a4030;
+      --accent: #e87050;
+    }
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 14px/1.4 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  main {
+    max-width: 800px;
+    margin: 32px auto;
+    padding: 0 20px;
+  }
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .title {
+    font-size: 22px;
+    font-weight: 700;
+    fill: var(--fg);
+    font-family: Georgia, serif;
+  }
+  .subtitle {
+    font-size: 13px;
+    font-style: italic;
+    fill: var(--muted);
+    font-family: Georgia, serif;
+  }
+  .label {
+    font-size: 14px;
+    font-weight: 600;
+    fill: var(--fg);
+  }
+  .small {
+    font-size: 12px;
+    fill: var(--muted);
+  }
+  .step-num {
+    font-size: 18px;
+    font-weight: 700;
+    fill: var(--accent);
+    font-family: Georgia, serif;
+  }
+  .node {
+    stroke: var(--line);
+    stroke-width: 1.5;
+  }
+  .neutral { fill: var(--neutral); }
+  .input { fill: var(--input); }
+  .process { fill: var(--process); }
+  .storage { fill: var(--storage); }
+  .external { fill: var(--external); }
+  .edge {
+    stroke: var(--line);
+    stroke-width: 1.5;
+    fill: none;
+  }
+  .tip-box {
+    fill: var(--external);
+    stroke: var(--line);
+    stroke-width: 1;
+    stroke-dasharray: 4 3;
+  }
+  .tip-text {
+    font-size: 11px;
+    fill: var(--muted);
+    font-style: italic;
+  }
+</style>
+<main>
+  <svg viewBox="0 0 760 920" xmlns="http://www.w3.org/2000/svg">
+    <!-- Title -->
+    <text x="380" y="36" text-anchor="middle" class="title">The Shelf · 使用指南</text>
+    <text x="380" y="56" text-anchor="middle" class="subtitle">NeoDB Personal Collection Poster Exporter</text>
+    <line x1="320" y1="68" x2="440" y2="68" stroke="var(--process)" stroke-width="2"/>
+
+    <!-- Step 1: Settings -->
+    <g transform="translate(40, 100)">
+      <text x="0" y="20" class="step-num">01</text>
+      <rect x="40" y="0" width="280" height="80" rx="4" class="node input"/>
+      <text x="60" y="24" class="label">⚙️ 设置 NeoDB 连接</text>
+      <text x="60" y="46" class="small">点击右上角齿轮图标，展开设置面板</text>
+      <text x="60" y="64" class="small">填写 Instance URL 和 Access Token</text>
+    </g>
+
+    <!-- Tip box for Step 1 -->
+    <g transform="translate(360, 100)">
+      <rect x="0" y="0" width="360" height="80" rx="4" class="tip-box"/>
+      <text x="16" y="22" class="tip-text">💡 如何获取 Token？</text>
+      <text x="16" y="40" class="small">1. 访问 neodb.social → 设置 → 开发者</text>
+      <text x="16" y="56" class="small">2. 创建应用，获取 OAuth Token</text>
+      <text x="16" y="72" class="small">3. Token 会保存在本地，下次无需重复填写</text>
+    </g>
+
+    <!-- Arrow 1→2 -->
+    <path d="M 180 190 L 180 220" class="edge" marker-end="url(#arrow)"/>
+
+    <!-- Step 2: Load Data -->
+    <g transform="translate(40, 230)">
+      <text x="0" y="20" class="step-num">02</text>
+      <rect x="40" y="0" width="280" height="64" rx="4" class="node process"/>
+      <text x="60" y="24" class="label">🔄 加载收藏数据</text>
+      <text x="60" y="46" class="small">点击同步图标，首次加载最近收藏</text>
+    </g>
+
+    <!-- Tip box for Step 2 -->
+    <g transform="translate(360, 230)">
+      <rect x="0" y="0" width="360" height="64" rx="4" class="tip-box"/>
+      <text x="16" y="22" class="small">首次加载最近 50 条，再次点击加载全部</text>
+      <text x="16" y="40" class="small">支持分类：书籍、电影、剧集、音乐、游戏</text>
+    </g>
+
+    <!-- Arrow 2→3 -->
+    <path d="M 180 304 L 180 334" class="edge" marker-end="url(#arrow)"/>
+
+    <!-- Step 3: Filter -->
+    <g transform="translate(40, 344)">
+      <text x="0" y="20" class="step-num">03</text>
+      <rect x="40" y="0" width="280" height="96" rx="4" class="node neutral"/>
+      <text x="60" y="24" class="label">🔍 筛选与排序</text>
+      <text x="60" y="46" class="small">• 分类筛选：All / Books / Films / TV / Music / Games</text>
+      <text x="60" y="62" class="small">• 状态筛选：Wishlist / Progress / Complete</text>
+      <text x="60" y="78" class="small">• 日期筛选：按月 / 按季 / 自定义范围</text>
+    </g>
+
+    <!-- Tip box for Step 3 -->
+    <g transform="translate(360, 344)">
+      <rect x="0" y="0" width="360" height="96" rx="4" class="tip-box"/>
+      <text x="16" y="22" class="small">视图切换：By Month（按月分组）/ Flat（平铺）</text>
+      <text x="16" y="40" class="small">点击任意海报卡片查看详情</text>
+      <text x="16" y="58" class="small">包括：封面、评分、评论、标签等</text>
+    </g>
+
+    <!-- Arrow 3→4 -->
+    <path d="M 180 450 L 180 480" class="edge" marker-end="url(#arrow)"/>
+
+    <!-- Step 4: Export -->
+    <g transform="translate(40, 490)">
+      <text x="0" y="20" class="step-num">04</text>
+      <rect x="40" y="0" width="280" height="64" rx="4" class="node storage"/>
+      <text x="60" y="24" class="label">📥 导出海报</text>
+      <text x="60" y="46" class="small">点击 Export Poster 按钮，预览并下载 PNG</text>
+    </g>
+
+    <!-- Tip box for Step 4 -->
+    <g transform="translate(360, 490)">
+      <rect x="0" y="0" width="360" height="64" rx="4" class="tip-box"/>
+      <text x="16" y="22" class="small">海报包含：标题、副标题、最多 12 张封面</text>
+      <text x="16" y="40" class="small">统计信息、生成时间戳，适合社交分享</text>
+    </g>
+
+    <!-- Divider -->
+    <line x1="40" y1="590" x2="720" y2="590" stroke="var(--line)" stroke-width="1" stroke-dasharray="6 4"/>
+
+    <!-- Quick Reference Section -->
+    <text x="380" y="620" text-anchor="middle" class="label">快速参考</text>
+
+    <!-- Icons row -->
+    <g transform="translate(80, 640)">
+      <rect x="0" y="0" width="140" height="50" rx="4" class="node input"/>
+      <text x="70" y="22" text-anchor="middle" class="small">⚙️ 设置</text>
+      <text x="70" y="38" text-anchor="middle" class="small">配置连接</text>
+    </g>
+
+    <g transform="translate(240, 640)">
+      <rect x="0" y="0" width="140" height="50" rx="4" class="node process"/>
+      <text x="70" y="22" text-anchor="middle" class="small">🔄 加载</text>
+      <text x="70" y="38" text-anchor="middle" class="small">获取数据</text>
+    </g>
+
+    <g transform="translate(400, 640)">
+      <rect x="0" y="0" width="140" height="50" rx="4" class="node neutral"/>
+      <text x="70" y="22" text-anchor="middle" class="small">🔍 筛选</text>
+      <text x="70" y="38" text-anchor="middle" class="small">选择内容</text>
+    </g>
+
+    <g transform="translate(560, 640)">
+      <rect x="0" y="0" width="140" height="50" rx="4" class="node storage"/>
+      <text x="70" y="22" text-anchor="middle" class="small">📥 导出</text>
+      <text x="70" y="38" text-anchor="middle" class="small">下载海报</text>
+    </g>
+
+    <!-- FAQ Section -->
+    <text x="380" y="730" text-anchor="middle" class="label">常见问题</text>
+
+    <g transform="translate(60, 750)">
+      <text x="0" y="14" class="small">Q: 支持哪些 NeoDB 实例？</text>
+      <text x="20" y="32" class="small">A: 默认 neodb.social，也支持自建实例</text>
+    </g>
+
+    <g transform="translate(60, 790)">
+      <text x="0" y="14" class="small">Q: 海报导出失败怎么办？</text>
+      <text x="20" y="32" class="small">A: 确保网络连接正常，封面图片可访问</text>
+    </g>
+
+    <g transform="translate(60, 830)">
+      <text x="0" y="14" class="small">Q: 数据会上传到服务器吗？</text>
+      <text x="20" y="32" class="small">A: 不会，所有数据仅在本地处理</text>
+    </g>
+
+    <!-- Footer -->
+    <line x1="280" y1="880" x2="480" y2="880" stroke="var(--process)" stroke-width="2"/>
+    <text x="380" y="905" text-anchor="middle" class="subtitle">github.com/YULANcc/neodb-poster</text>
+
+    <!-- Arrow marker definition -->
+    <defs>
+      <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 Z" fill="var(--line)"/>
+      </marker>
+    </defs>
+  </svg>
+</main>
