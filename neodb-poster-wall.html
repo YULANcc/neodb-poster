@@ -820,6 +820,12 @@
       margin-bottom: 20px;
       background: var(--bg-muted);
       padding: 20px;
+      overflow: hidden;
+    }
+
+    .poster-preview-wrap .poster-scale-container {
+      position: relative;
+      transform-origin: top center;
     }
 
     .poster-preview-wrap img {
@@ -1555,10 +1561,20 @@
       if (target) {
         const wrapW = posterPreviewWrap.clientWidth - 40;
         const scale = Math.min(wrapW / 900, 1);
+        
+        // Create a wrapper to contain the scaled poster
+        const wrapper = document.createElement('div');
+        wrapper.className = 'poster-scale-container';
+        wrapper.style.width = (900 * scale) + 'px';
+        wrapper.style.margin = '0 auto';
+        
+        // Move target into wrapper
+        target.parentNode.insertBefore(wrapper, target);
+        wrapper.appendChild(target);
+        
         target.style.transform = 'scale(' + scale + ')';
         target.style.transformOrigin = 'top left';
-        // Set wrapper height to match scaled poster to prevent layout issues
-        posterPreviewWrap.style.minHeight = (target.scrollHeight * scale + 20) + 'px';
+        wrapper.style.height = (target.scrollHeight * scale) + 'px';
       }
 
       posterExportOverlay.classList.add('open');
