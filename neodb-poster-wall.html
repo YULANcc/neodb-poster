@@ -169,33 +169,81 @@
     .toolbar {
       max-width: 1280px;
       margin: 0 auto;
-      padding: 20px 32px 16px;
+      padding: 16px 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
-
-
-    .filter-row {
+    .filter-toggle {
       display: flex;
       align-items: center;
-      gap: 2px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      padding-bottom: 2px;
-      margin-bottom: -2px;
-      max-width: 100%;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-dark);
+      background: transparent;
+      color: var(--ink-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
     }
 
-    .filter-row::-webkit-scrollbar { display: none; }
+    .filter-toggle:hover {
+      border-color: var(--ink-muted);
+      color: var(--ink);
+    }
+
+    .filter-toggle.active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .filter-panel {
+      width: 100%;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      background: var(--bg-warm);
+      border-radius: var(--radius);
+      padding: 0 16px;
+    }
+
+    .filter-panel.open {
+      max-height: 500px;
+      padding: 16px;
+    }
+
+    .filter-section {
+      margin-bottom: 16px;
+    }
+
+    .filter-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
 
     .filter-chip {
-      padding: 5px 14px;
+      padding: 6px 12px;
       border-radius: 20px;
       border: 1.5px solid var(--border-dark);
       background: transparent;
@@ -206,173 +254,50 @@
       transition: all 0.18s ease;
       font-family: inherit;
       letter-spacing: 0.2px;
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
-    .filter-chip:last-child { border-right: 1.5px solid var(--border-dark); }
-    .filter-chip:hover { border-color: var(--ink-muted); color: var(--ink); background: var(--bg-muted); }
-    .filter-chip.active { color: var(--ink); font-weight: 600; background: var(--bg-elevated); border-color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-    .filter-chip:disabled { color: var(--ink-faint); cursor: default; pointer-events: none; }
-    .filter-chip:disabled.active { font-weight: 400; background: transparent; box-shadow: none; }
-
-    .filter-divider {
-      width: 1px;
-      height: 14px;
-      background: var(--border-dark);
-      margin: 0 8px;
-      flex-shrink: 0;
     }
 
-    .toolbar-right {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
+    .filter-chip:hover {
+      border-color: var(--ink-muted);
+      color: var(--ink);
+      background: var(--bg-muted);
     }
 
-    .sub-toolbar {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 16px 32px;
+    .filter-chip.active {
+      color: var(--ink);
+      font-weight: 600;
+      background: var(--bg-elevated);
+      border-color: var(--ink);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .view-toggle {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
+      gap: 4px;
+      background: var(--bg-muted);
+      padding: 4px;
+      border-radius: var(--radius);
     }
 
-    .sub-toolbar-left { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
-    .sub-toolbar-right { display: flex; align-items: center; gap: 12px; }
-
-    .view-label {
-      font-size: 10px;
-      font-weight: 500;
-      color: var(--ink-muted);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-right: 8px;
-      flex-shrink: 0;
-    }
-
-    .view-chip {
-      padding: 4px 14px;
-      border-radius: 20px;
-      border: 1.5px solid transparent;
+    .view-btn {
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      border: none;
       background: transparent;
       color: var(--ink-muted);
       font-size: 12px;
-      font-weight: 400;
-      cursor: pointer;
-      transition: all 0.18s ease;
-      font-family: inherit;
-      flex-shrink: 0;
-    }
-    .view-chip:first-of-type { border-right: 1.5px solid transparent; }
-    .view-chip:hover:not(.active) { border-color: var(--border-dark); color: var(--ink); }
-    .view-chip.active { color: var(--ink); font-weight: 600; border-color: var(--ink); background: var(--bg-elevated); }
-    .view-chip:disabled { color: var(--ink-faint); cursor: default; pointer-events: none; }
-    .view-chip:disabled.active { background: transparent; }
-
-    .date-bar {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 16px 32px;
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-
-    .date-bar::-webkit-scrollbar { display: none; }
-
-    .date-preset {
-      padding: 4px 10px;
-      border-radius: 0;
-      border: none;
-      background: transparent;
-      color: var(--ink-muted);
-      font-size: 11px;
-      font-weight: 400;
+      font-weight: 500;
       cursor: pointer;
       transition: var(--transition);
       font-family: 'Inter', sans-serif;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      flex-shrink: 0;
     }
 
-    .date-preset:hover { color: var(--ink); }
-    .date-preset.active { color: var(--ink); font-weight: 600; }
-    .date-preset:disabled { color: var(--ink-faint); cursor: default; pointer-events: none; }
-    .date-preset:disabled.active { font-weight: 400; }
-
-    .date-mode-group {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      margin-right: 16px;
-      padding-right: 16px;
-      border-right: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-
-    .date-mode {
-      padding: 4px 10px;
-      border-radius: 0;
-      border: none;
-      background: transparent;
-      color: var(--ink-muted);
-      font-size: 11px;
-      font-weight: 400;
-      cursor: pointer;
-      transition: var(--transition);
-      font-family: 'Inter', sans-serif;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      flex-shrink: 0;
-    }
-    .date-mode:hover { color: var(--ink); }
-    .date-mode.active { color: var(--ink); font-weight: 600; background: var(--ink); color: #fff; }
-
-    .date-preset-group {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      flex-wrap: nowrap;
-    }
-    .date-preset-group.hidden { display: none; }
-
-    .date-range {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-left: 12px;
-      padding-left: 12px;
-      border-left: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-
-    .date-range input[type="date"] {
-      padding: 4px 8px;
-      border-radius: 0;
-      border: 1px solid var(--border);
-      background: var(--bg);
+    .view-btn.active {
+      background: var(--bg-elevated);
       color: var(--ink);
-      font-size: 11px;
-      font-family: 'Inter', sans-serif;
-      outline: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
-    .date-range input[type="date"]:focus { border-color: var(--ink-muted); }
-    .date-range span { font-size: 11px; color: var(--ink-faint); }
 
-    .export-bar {
-      display: flex;
-      align-items: center;
-    }
 
     .stats-bar {
       max-width: 1280px;
@@ -952,24 +877,10 @@
     .masthead-meta { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.3px; }
 
       .toolbar { padding: 12px 16px; flex-direction: column; align-items: stretch; gap: 12px; }
-      .filter-row { gap: 6px; justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
-      .filter-row:last-child { border-bottom: none; }
-      .filter-chip { padding: 8px 12px; font-size: 11px; white-space: nowrap; }
-
-      .sub-toolbar { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
-      .sub-toolbar-left { justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
-      .sub-toolbar-left::-webkit-scrollbar { display: none; }
-      .sub-toolbar-right { justify-content: flex-start; width: 100%; }
-
-      .view-label { margin-right: 6px; font-size: 9px; }
-      .view-chip { padding: 3px 8px; font-size: 10px; }
-
-      .date-bar { padding: 10px 16px; gap: 4px; overflow-x: auto; align-items: center; }
-      .date-bar .view-label { margin-right: 8px; flex-shrink: 0; }
-      .date-mode-group { margin-right: 8px; padding-right: 8px; border-right: 1px solid var(--border); flex-shrink: 0; }
-      .date-mode { padding: 3px 8px; font-size: 10px; }
-      .date-preset { padding: 3px 8px; font-size: 10px; white-space: nowrap; }
-      .date-preset-group { flex-wrap: nowrap; }
+      .filter-panel { padding: 12px; }
+      .filter-chip { padding: 8px 12px; font-size: 11px; }
+      .view-toggle { width: 100%; }
+      .view-btn { flex: 1; text-align: center; }
 
       .stats-bar { padding: 12px 16px; flex-direction: column; gap: 12px; align-items: stretch; }
       .stats-bar::-webkit-scrollbar { display: none; }
@@ -1014,13 +925,10 @@
     @media (max-width: 480px) {
       .poster-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
       .masthead-title { font-size: 22px; }
-      .sub-toolbar { flex-direction: column; align-items: flex-start; gap: 8px; }
-      .sub-toolbar-right { width: 100%; justify-content: flex-start; }
-      .date-bar { flex-wrap: wrap; gap: 4px; }
-      .date-mode-group { width: 100%; border-right: none; border-bottom: 1px solid var(--border); margin-right: 0; padding-right: 0; padding-bottom: 6px; margin-bottom: 2px; }
-      .date-preset-group { width: 100%; }
       .stats-bar { flex-direction: column; gap: 12px; align-items: stretch; }
       .export-bar { width: 100%; justify-content: flex-start; margin-top: 4px; }
+      .filter-panel { padding: 12px; }
+      .filter-chip { padding: 5px 10px; font-size: 11px; }
     }
 </style>
 </head>
@@ -1068,57 +976,47 @@
     </div>
 
   <div class="toolbar">
-      <div class="filter-row" id="catFilterRow">
-        <button class="filter-chip active" data-cat="all">All</button>
-        <button class="filter-chip" data-cat="book">📚 Books</button>
-        <button class="filter-chip" data-cat="movie">🎬 Films</button>
-        <button class="filter-chip" data-cat="tv">📺 TV</button>
-        <button class="filter-chip" data-cat="music">🎵 Music</button>
-        <button class="filter-chip" data-cat="game">🎮 Games</button>
-      </div>
-      <div class="filter-row" id="statusFilterRow">
-        <button class="filter-chip active" data-status="all">All</button>
-        <button class="filter-chip" data-status="wishlist" id="chipWishlist">☆ Wishlist</button>
-        <button class="filter-chip" data-status="progress" id="chipProgress">◑ Progress</button>
-        <button class="filter-chip" data-status="complete" id="chipComplete">✓ Complete</button>
-      </div>
+    <button class="filter-toggle" id="filterToggle">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+      </svg>
+      <span id="filterLabel">筛选</span>
+    </button>
+    <div class="view-toggle">
+      <button class="view-btn active" id="viewGrouped">按月</button>
+      <button class="view-btn" id="viewFlat">平铺</button>
     </div>
+  </div>
 
-    <div class="sub-toolbar">
-      <div class="sub-toolbar-left" id="viewToggleRow">
-        <button class="view-chip active" id="viewGrouped">By Month</button>
-        <button class="view-chip" id="viewFlat">Flat</button>
+  <div class="filter-panel" id="filterPanel">
+    <div class="filter-section">
+      <div class="filter-section-label">分类</div>
+      <div class="filter-chips" id="catFilterRow">
+        <button class="filter-chip active" data-cat="all">全部</button>
+        <button class="filter-chip" data-cat="book">书籍</button>
+        <button class="filter-chip" data-cat="movie">电影</button>
+        <button class="filter-chip" data-cat="tv">剧集</button>
+        <button class="filter-chip" data-cat="music">音乐</button>
+        <button class="filter-chip" data-cat="game">游戏</button>
       </div>
-      <div class="sub-toolbar-right">
-        <!-- Date range moved to date-bar custom mode -->
+    </div>
+    <div class="filter-section">
+      <div class="filter-section-label">状态</div>
+      <div class="filter-chips" id="statusFilterRow">
+        <button class="filter-chip active" data-status="all">全部</button>
+        <button class="filter-chip" data-status="wishlist">想读/看</button>
+        <button class="filter-chip" data-status="progress">进行中</button>
+        <button class="filter-chip" data-status="complete">已完成</button>
       </div>
     </div>
-  </header>
-
-  <div class="date-bar" id="dateBar">
-    <div class="date-mode-group">
-      <button class="date-mode active" data-mode="yearmonth">By Year / Month</button>
-      <button class="date-mode" data-mode="season">By Season</button>
-      <button class="date-mode" data-mode="custom">Custom</button>
-    </div>
-    <div class="date-preset-group" id="yearmonthPresets">
-      <button class="date-preset active" data-preset="all">All Time</button>
-      <button class="date-preset" data-preset="this-month">This Month</button>
-      <button class="date-preset" data-preset="last-month">Last Month</button>
-      <button class="date-preset" data-preset="this-year">This Year</button>
-      <button class="date-preset" data-preset="last-year">Last Year</button>
-    </div>
-    <div class="date-preset-group hidden" id="seasonPresets">
-      <button class="date-preset" data-preset="spring">Spring</button>
-      <button class="date-preset" data-preset="summer">Summer</button>
-      <button class="date-preset" data-preset="autumn">Autumn</button>
-      <button class="date-preset" data-preset="winter">Winter</button>
-    </div>
-    <div class="date-preset-group hidden" id="customPresets">
-      <div class="date-range">
-        <input type="date" id="dateFrom">
-        <span>-</span>
-        <input type="date" id="dateTo">
+    <div class="filter-section">
+      <div class="filter-section-label">时间</div>
+      <div class="filter-chips" id="dateFilterRow">
+        <button class="filter-chip active" data-date="all">全部</button>
+        <button class="filter-chip" data-date="this-month">本月</button>
+        <button class="filter-chip" data-date="last-month">上月</button>
+        <button class="filter-chip" data-date="this-year">今年</button>
+        <button class="filter-chip" data-date="last-year">去年</button>
       </div>
     </div>
   </div>
@@ -1989,81 +1887,39 @@
 
 
 
-    document.querySelectorAll('[data-cat]').forEach(btn => {
+    // 筛选面板切换
+    document.getElementById('filterToggle').addEventListener('click', () => {
+      document.getElementById('filterPanel').classList.toggle('open');
+    });
+
+    // 分类筛选
+    document.querySelectorAll('#catFilterRow .filter-chip').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-cat]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#catFilterRow .filter-chip').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         state.filterCat = btn.dataset.cat;
         applyFilters();
       });
     });
 
-    document.querySelectorAll('[data-status]').forEach(btn => {
+    // 状态筛选
+    document.querySelectorAll('#statusFilterRow .filter-chip').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-status]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#statusFilterRow .filter-chip').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         state.filterStatus = btn.dataset.status;
         applyFilters();
       });
     });
 
-    document.querySelectorAll('[data-preset]').forEach(btn => {
+    // 日期筛选
+    document.querySelectorAll('#dateFilterRow .filter-chip').forEach(btn => {
       btn.addEventListener('click', () => {
-        // Only handle visible preset buttons
-        if (btn.closest('.date-preset-group.hidden')) return;
-        btn.closest('.date-preset-group').querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#dateFilterRow .filter-chip').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        state.datePreset = btn.dataset.preset;
-        if (state.datePreset !== 'all') {
-          document.getElementById('dateFrom').value = '';
-          document.getElementById('dateTo').value = '';
-          state.dateFrom = ''; state.dateTo = '';
-        }
+        state.datePreset = btn.dataset.date;
         applyFilters();
       });
-    });
-
-    // Date mode switching
-    document.querySelectorAll('[data-mode]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const mode = btn.dataset.mode;
-        document.getElementById('yearmonthPresets').classList.toggle('hidden', mode !== 'yearmonth');
-        document.getElementById('seasonPresets').classList.toggle('hidden', mode !== 'season');
-        document.getElementById('customPresets').classList.toggle('hidden', mode !== 'custom');
-        // Reset active preset when switching modes
-        if (mode === 'yearmonth') {
-          state.datePreset = 'all';
-          document.querySelectorAll('#yearmonthPresets [data-preset]').forEach(b => b.classList.remove('active'));
-          document.querySelector('#yearmonthPresets [data-preset="all"]').classList.add('active');
-        } else if (mode === 'season') {
-          state.datePreset = 'spring';
-          document.querySelectorAll('#seasonPresets [data-preset]').forEach(b => b.classList.remove('active'));
-          document.querySelector('#seasonPresets [data-preset="spring"]').classList.add('active');
-        } else {
-          state.datePreset = 'all';
-        }
-        applyFilters();
-      });
-    });
-
-    document.getElementById('dateFrom').addEventListener('change', e => {
-      state.dateFrom = e.target.value;
-      if (state.dateFrom) {
-        document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
-        state.datePreset = 'all';
-      }
-      applyFilters();
-    });
-
-    document.getElementById('dateTo').addEventListener('change', e => {
-      state.dateTo = e.target.value;
-      if (state.dateTo) {
-        document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
-        state.datePreset = 'all';
-      }
-      applyFilters();
     });
 
     document.getElementById('viewGrouped').addEventListener('click', () => {
