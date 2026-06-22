@@ -1553,15 +1553,12 @@
       // Apply zoom BEFORE opening the overlay to prevent flash of unstyled content
       const target = posterPreviewWrap.querySelector('#poster-render-target');
       if (target) {
-        const wrapW = posterPreviewWrap.clientWidth - 24;
-        const wrapH = posterPreviewWrap.clientHeight - 24;
-        // Estimate poster height based on content
-        const posterH = target.scrollHeight;
-        const scaleX = wrapW / 900;
-        const scaleY = wrapH / posterH;
-        const scale = Math.min(scaleX, scaleY, 1);
+        const wrapW = posterPreviewWrap.clientWidth - 40;
+        const scale = Math.min(wrapW / 900, 1);
         target.style.transform = 'scale(' + scale + ')';
         target.style.transformOrigin = 'top left';
+        // Set wrapper height to match scaled poster to prevent layout issues
+        posterPreviewWrap.style.minHeight = (target.scrollHeight * scale + 20) + 'px';
       }
 
       posterExportOverlay.classList.add('open');
