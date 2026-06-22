@@ -119,7 +119,7 @@
       letter-spacing: 0.3px;
     }
 
-    .btn-label { display: inline; }
+    .btn-label { display: none; }
 
     .btn {
       padding: 8px 16px;
@@ -405,8 +405,6 @@
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       gap: 20px;
     }
-
-    .btn-label { display: inline; }
 
     .poster {
       position: relative;
@@ -2066,161 +2064,7 @@
     } else {
       empty.style.display = 'block';
     }
-  
-// ===== DEFENSIVE WRAPPER =====
-(function() {
-  try {
-    // Force all interactive elements to be tappable
-    document.querySelectorAll('button, .filter-chip, .view-chip, .date-preset, .date-mode').forEach(el => {
-      el.style.cursor = 'pointer';
-      el.style.pointerEvents = 'auto';
-      el.style.webkitTapHighlightColor = 'rgba(0,0,0,0.12)';
-    });
 
-    // Ensure settingsDrawer is properly initialized
-    const sd = document.getElementById('settingsDrawer');
-    if (sd) {
-      sd.style.overflow = 'hidden';
-      sd.style.display = 'block';
-    }
-
-    // Force settingsDrawer z-index above overlay
-    const modal = document.getElementById('modal');
-    if (modal) {
-      modal.style.zIndex = '150';
-    }
-
-    // Debug: add a simple touch test
-    const settingsBtn = document.getElementById('settingsBtn');
-    if (settingsBtn) {
-      settingsBtn.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        console.log('settingsBtn touchstart fired');
-        this.click();
-      }, { passive: false });
-    }
-
-    console.log('Defense wrapper OK, buttons found:', document.querySelectorAll('button').length);
-  } catch(e) {
-    console.error('Defense wrapper error:', e.message);
-  }
-})();
-
-// ===== GLOBAL ERROR CAPTURE =====
-window.addEventListener('error', function(e) {
-  console.error('GLOBAL ERROR:', e.message, 'at', e.filename, 'line', e.lineno);
-  document.title = 'ERROR: ' + e.message;
-});
-
-// ===== SAFARI INIT GUARD =====
-(function() {
-  var errs = [];
-  function tryFn(fn, label) {
-    try {
-      fn();
-    } catch(e) {
-      errs.push(label + ': ' + e.message);
-      console.error('Init error [' + label + ']:', e.message);
-    }
-  }
-
-  // Re-attach all event listeners with error protection
-  tryFn(function() {
-    var settingsBtn = document.getElementById('settingsBtn');
-    if (settingsBtn) settingsBtn.addEventListener('click', function() {
-      document.getElementById('settingsDrawer').classList.toggle('open');
-    });
-
-    var loadBtn = document.getElementById('loadBtn');
-    if (loadBtn) loadBtn.addEventListener('click', function() {
-      state.instance = document.getElementById('instanceUrl').value.trim();
-      state.token = document.getElementById('accessToken').value.trim();
-      if (!state.instance || !state.token) {
-        alert('Please enter instance URL and access token in Settings.');
-        return;
-      }
-      localStorage.setItem('neodb_instance', state.instance);
-      localStorage.setItem('neodb_token', state.token);
-      doLoad(true);
-    });
-
-    document.querySelectorAll('[data-cat]').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('[data-cat]').forEach(function(b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        state.filterCat = btn.dataset.cat;
-        applyFilters();
-      });
-    });
-
-    document.querySelectorAll('[data-status]').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('[data-status]').forEach(function(b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        state.filterStatus = btn.dataset.status;
-        applyFilters();
-      });
-    });
-
-    document.querySelectorAll('[data-preset]').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        if (btn.closest('.date-preset-group.hidden')) return;
-        btn.closest('.date-preset-group').querySelectorAll('[data-preset]').forEach(function(b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        state.datePreset = btn.dataset.preset;
-        if (state.datePreset !== 'all') {
-          document.getElementById('dateFrom').value = '';
-          document.getElementById('dateTo').value = '';
-          state.dateFrom = ''; state.dateTo = '';
-        }
-        applyFilters();
-      });
-    });
-
-    document.querySelectorAll('[data-mode]').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('[data-mode]').forEach(function(b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        var mode = btn.dataset.mode;
-        document.getElementById('yearmonthPresets').classList.toggle('hidden', mode !== 'yearmonth');
-        document.getElementById('seasonPresets').classList.toggle('hidden', mode !== 'season');
-        document.getElementById('customPresets').classList.toggle('hidden', mode !== 'custom');
-        if (mode === 'yearmonth') {
-          state.datePreset = 'all';
-          document.querySelectorAll('#yearmonthPresets [data-preset]').forEach(function(b) { b.classList.remove('active'); });
-          var allBtn = document.querySelector('#yearmonthPresets [data-preset="all"]');
-          if (allBtn) allBtn.classList.add('active');
-        } else if (mode === 'season') {
-          state.datePreset = 'spring';
-          document.querySelectorAll('#seasonPresets [data-preset]').forEach(function(b) { b.classList.remove('active'); });
-          var springBtn = document.querySelector('#seasonPresets [data-preset="spring"]');
-          if (springBtn) springBtn.classList.add('active');
-        } else {
-          state.datePreset = 'all';
-        }
-        applyFilters();
-      });
-    });
-
-    document.getElementById('viewGrouped').addEventListener('click', function() {
-      state.groupByMonth = true;
-      updateViewButtons();
-      applyFilters();
-    });
-    document.getElementById('viewFlat').addEventListener('click', function() {
-      state.groupByMonth = false;
-      updateViewButtons();
-      applyFilters();
-    });
-
-    console.log('SAFARI INIT OK, buttons:', document.querySelectorAll('button').length);
-  }, 'safari-init');
-
-  if (errs.length) {
-    document.title = 'INIT ERRORS: ' + errs.join(' | ');
-    console.error('Init errors found:', errs);
-  }
-})();
 </script>
 </body>
 </html>
