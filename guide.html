@@ -1,244 +1,416 @@
-<!doctype html>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>The Shelf - 使用指南</title>
-<style>
-  :root {
-    color-scheme: light dark;
-    --bg: #faf7f2;
-    --fg: #2a2218;
-    --muted: #a08060;
-    --line: #d4c4a8;
-    --neutral: #f0ebe4;
-    --input: #e8ddd0;
-    --process: #d4956a;
-    --storage: #c09578;
-    --external: #e8b89d;
-    --accent: #c45c3e;
-  }
-  @media (prefers-color-scheme: dark) {
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Shelf · 使用指南</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
     :root {
-      --bg: #1a1612;
-      --fg: #e8ddd0;
-      --muted: #a08060;
-      --line: #4a3e30;
-      --neutral: #2a2218;
-      --input: #3a3028;
-      --process: #8b5e3c;
-      --storage: #6b4e38;
-      --external: #5a4030;
-      --accent: #e87050;
+      --bg: #faf7f2;
+      --bg-card: #ffffff;
+      --ink: #2a2218;
+      --ink-secondary: #5a4a38;
+      --ink-muted: #a08060;
+      --ink-faint: #c0a888;
+      --accent: #d4956a;
+      --accent-soft: rgba(212,149,106,0.12);
+      --border: #e8ddd0;
+      --shadow: rgba(42,34,24,0.06);
+      --radius: 16px;
+      --radius-sm: 10px;
     }
-  }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--fg);
-    font: 14px/1.4 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
-  main {
-    max-width: 800px;
-    margin: 32px auto;
-    padding: 0 20px;
-  }
-  svg {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  .title {
-    font-size: 22px;
-    font-weight: 700;
-    fill: var(--fg);
-    font-family: Georgia, serif;
-  }
-  .subtitle {
-    font-size: 13px;
-    font-style: italic;
-    fill: var(--muted);
-    font-family: Georgia, serif;
-  }
-  .label {
-    font-size: 14px;
-    font-weight: 600;
-    fill: var(--fg);
-  }
-  .small {
-    font-size: 12px;
-    fill: var(--muted);
-  }
-  .step-num {
-    font-size: 18px;
-    font-weight: 700;
-    fill: var(--accent);
-    font-family: Georgia, serif;
-  }
-  .node {
-    stroke: var(--line);
-    stroke-width: 1.5;
-  }
-  .neutral { fill: var(--neutral); }
-  .input { fill: var(--input); }
-  .process { fill: var(--process); }
-  .storage { fill: var(--storage); }
-  .external { fill: var(--external); }
-  .edge {
-    stroke: var(--line);
-    stroke-width: 1.5;
-    fill: none;
-  }
-  .tip-box {
-    fill: var(--external);
-    stroke: var(--line);
-    stroke-width: 1;
-    stroke-dasharray: 4 3;
-  }
-  .tip-text {
-    font-size: 11px;
-    fill: var(--muted);
-    font-style: italic;
-  }
-</style>
-<main>
-  <svg viewBox="0 0 760 920" xmlns="http://www.w3.org/2000/svg">
-    <!-- Title -->
-    <text x="380" y="36" text-anchor="middle" class="title">The Shelf · 使用指南</text>
-    <text x="380" y="56" text-anchor="middle" class="subtitle">NeoDB Personal Collection Poster Exporter</text>
-    <line x1="320" y1="68" x2="440" y2="68" stroke="var(--process)" stroke-width="2"/>
 
-    <!-- Step 1: Settings -->
-    <g transform="translate(40, 100)">
-      <text x="0" y="20" class="step-num">01</text>
-      <rect x="40" y="0" width="280" height="80" rx="4" class="node input"/>
-      <text x="60" y="24" class="label">⚙️ 设置 NeoDB 连接</text>
-      <text x="60" y="46" class="small">点击右上角齿轮图标，展开设置面板</text>
-      <text x="60" y="64" class="small">填写 Instance URL 和 Access Token</text>
-    </g>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <!-- Tip box for Step 1 -->
-    <g transform="translate(360, 100)">
-      <rect x="0" y="0" width="360" height="80" rx="4" class="tip-box"/>
-      <text x="16" y="22" class="tip-text">💡 如何获取 Token？</text>
-      <text x="16" y="40" class="small">1. 访问 neodb.social → 设置 → 开发者</text>
-      <text x="16" y="56" class="small">2. 创建应用，获取 OAuth Token</text>
-      <text x="16" y="72" class="small">3. Token 会保存在本地，下次无需重复填写</text>
-    </g>
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
 
-    <!-- Arrow 1→2 -->
-    <path d="M 180 190 L 180 220" class="edge" marker-end="url(#arrow)"/>
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
 
-    <!-- Step 2: Load Data -->
-    <g transform="translate(40, 230)">
-      <text x="0" y="20" class="step-num">02</text>
-      <rect x="40" y="0" width="280" height="64" rx="4" class="node process"/>
-      <text x="60" y="24" class="label">🔄 加载收藏数据</text>
-      <text x="60" y="46" class="small">点击同步图标，首次加载最近收藏</text>
-    </g>
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
 
-    <!-- Tip box for Step 2 -->
-    <g transform="translate(360, 230)">
-      <rect x="0" y="0" width="360" height="64" rx="4" class="tip-box"/>
-      <text x="16" y="22" class="small">首次加载最近 50 条，再次点击加载全部</text>
-      <text x="16" y="40" class="small">支持分类：书籍、电影、剧集、音乐、游戏</text>
-    </g>
+    .header-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--accent-soft), rgba(232,184,157,0.15));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      box-shadow: 0 4px 16px rgba(212,149,106,0.15);
+    }
 
-    <!-- Arrow 2→3 -->
-    <path d="M 180 304 L 180 334" class="edge" marker-end="url(#arrow)"/>
+    .header-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--accent);
+    }
 
-    <!-- Step 3: Filter -->
-    <g transform="translate(40, 344)">
-      <text x="0" y="20" class="step-num">03</text>
-      <rect x="40" y="0" width="280" height="96" rx="4" class="node neutral"/>
-      <text x="60" y="24" class="label">🔍 筛选与排序</text>
-      <text x="60" y="46" class="small">• 分类筛选：All / Books / Films / TV / Music / Games</text>
-      <text x="60" y="62" class="small">• 状态筛选：Wishlist / Progress / Complete</text>
-      <text x="60" y="78" class="small">• 日期筛选：按月 / 按季 / 自定义范围</text>
-    </g>
+    .header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
 
-    <!-- Tip box for Step 3 -->
-    <g transform="translate(360, 344)">
-      <rect x="0" y="0" width="360" height="96" rx="4" class="tip-box"/>
-      <text x="16" y="22" class="small">视图切换：By Month（按月分组）/ Flat（平铺）</text>
-      <text x="16" y="40" class="small">点击任意海报卡片查看详情</text>
-      <text x="16" y="58" class="small">包括：封面、评分、评论、标签等</text>
-    </g>
+    .header p {
+      font-size: 15px;
+      color: var(--ink-muted);
+      font-style: italic;
+      font-family: 'Playfair Display', Georgia, serif;
+    }
 
-    <!-- Arrow 3→4 -->
-    <path d="M 180 450 L 180 480" class="edge" marker-end="url(#arrow)"/>
+    .divider {
+      width: 56px;
+      height: 3px;
+      background: linear-gradient(to right, var(--accent), #e8b89d);
+      border-radius: 2px;
+      margin: 24px auto 0;
+    }
 
-    <!-- Step 4: Export -->
-    <g transform="translate(40, 490)">
-      <text x="0" y="20" class="step-num">04</text>
-      <rect x="40" y="0" width="280" height="64" rx="4" class="node storage"/>
-      <text x="60" y="24" class="label">📥 导出海报</text>
-      <text x="60" y="46" class="small">点击 Export Poster 按钮，预览并下载 PNG</text>
-    </g>
+    /* Steps */
+    .steps {
+      position: relative;
+    }
 
-    <!-- Tip box for Step 4 -->
-    <g transform="translate(360, 490)">
-      <rect x="0" y="0" width="360" height="64" rx="4" class="tip-box"/>
-      <text x="16" y="22" class="small">海报包含：标题、副标题、最多 12 张封面</text>
-      <text x="16" y="40" class="small">统计信息、生成时间戳，适合社交分享</text>
-    </g>
+    .steps::before {
+      content: '';
+      position: absolute;
+      left: 31px;
+      top: 48px;
+      bottom: 48px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--border), transparent);
+    }
 
-    <!-- Divider -->
-    <line x1="40" y1="590" x2="720" y2="590" stroke="var(--line)" stroke-width="1" stroke-dasharray="6 4"/>
+    .step {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 36px;
+      position: relative;
+    }
 
-    <!-- Quick Reference Section -->
-    <text x="380" y="620" text-anchor="middle" class="label">快速参考</text>
+    .step:last-child {
+      margin-bottom: 0;
+    }
 
-    <!-- Icons row -->
-    <g transform="translate(80, 640)">
-      <rect x="0" y="0" width="140" height="50" rx="4" class="node input"/>
-      <text x="70" y="22" text-anchor="middle" class="small">⚙️ 设置</text>
-      <text x="70" y="38" text-anchor="middle" class="small">配置连接</text>
-    </g>
+    .step-number {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px var(--shadow);
+    }
 
-    <g transform="translate(240, 640)">
-      <rect x="0" y="0" width="140" height="50" rx="4" class="node process"/>
-      <text x="70" y="22" text-anchor="middle" class="small">🔄 加载</text>
-      <text x="70" y="38" text-anchor="middle" class="small">获取数据</text>
-    </g>
+    .step:hover .step-number {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      transform: scale(1.08);
+      box-shadow: 0 4px 16px rgba(212,149,106,0.2);
+    }
 
-    <g transform="translate(400, 640)">
-      <rect x="0" y="0" width="140" height="50" rx="4" class="node neutral"/>
-      <text x="70" y="22" text-anchor="middle" class="small">🔍 筛选</text>
-      <text x="70" y="38" text-anchor="middle" class="small">选择内容</text>
-    </g>
+    .step-content {
+      flex: 1;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 28px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 12px var(--shadow);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-    <g transform="translate(560, 640)">
-      <rect x="0" y="0" width="140" height="50" rx="4" class="node storage"/>
-      <text x="70" y="22" text-anchor="middle" class="small">📥 导出</text>
-      <text x="70" y="38" text-anchor="middle" class="small">下载海报</text>
-    </g>
+    .step:hover .step-content {
+      box-shadow: 0 8px 24px rgba(42,34,24,0.1);
+      transform: translateY(-3px);
+      border-color: rgba(212,149,106,0.3);
+    }
 
-    <!-- FAQ Section -->
-    <text x="380" y="730" text-anchor="middle" class="label">常见问题</text>
+    .step-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-    <g transform="translate(60, 750)">
-      <text x="0" y="14" class="small">Q: 支持哪些 NeoDB 实例？</text>
-      <text x="20" y="32" class="small">A: 默认 neodb.social，也支持自建实例</text>
-    </g>
+    .step-title .icon {
+      width: 20px;
+      height: 20px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
 
-    <g transform="translate(60, 790)">
-      <text x="0" y="14" class="small">Q: 海报导出失败怎么办？</text>
-      <text x="20" y="32" class="small">A: 确保网络连接正常，封面图片可访问</text>
-    </g>
+    .step-desc {
+      font-size: 14px;
+      color: var(--ink-secondary);
+      line-height: 1.7;
+    }
 
-    <g transform="translate(60, 830)">
-      <text x="0" y="14" class="small">Q: 数据会上传到服务器吗？</text>
-      <text x="20" y="32" class="small">A: 不会，所有数据仅在本地处理</text>
-    </g>
+    .step-tip {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: var(--accent-soft);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      border-left: 3px solid var(--accent);
+    }
+
+    .step-tip strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* FAQ Section */
+    .faq {
+      margin-top: 64px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--ink);
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .faq-item {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+
+    .faq-item:hover {
+      border-color: rgba(212,149,106,0.3);
+      box-shadow: 0 2px 12px var(--shadow);
+    }
+
+    .faq-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .faq-q {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .faq-a {
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 56px;
+      text-align: center;
+    }
+
+    .footer-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--border);
+      margin: 0 auto 20px;
+    }
+
+    .footer p {
+      font-size: 13px;
+      color: var(--ink-faint);
+      letter-spacing: 0.3px;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer a:hover {
+      color: var(--ink-secondary);
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      .container { padding: 36px 16px 60px; }
+      .header h1 { font-size: 26px; }
+      .header-icon { width: 56px; height: 56px; }
+      .step { gap: 16px; }
+      .step-number { width: 48px; height: 48px; font-size: 18px; }
+      .steps::before { left: 23px; }
+      .step-content { padding: 20px; }
+      .faq-title { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <h1>The Shelf 使用指南</h1>
+      <p>NeoDB Personal Collection Poster Exporter</p>
+      <div class="divider"></div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps">
+      <!-- Step 1 -->
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <div class="step-title">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            设置 NeoDB 连接
+          </div>
+          <div class="step-desc">
+            点击右上角的齿轮图标，展开设置面板。填写你的 NeoDB 实例地址和 Access Token。
+          </div>
+          <div class="step-tip">
+            <strong>如何获取 Token？</strong><br>
+            访问 neodb.social → 设置 → 开发者 → 创建应用。Token 会保存在本地，下次无需重复填写。
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <div class="step-title">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6"/>
+              <path d="M2.5 12A10 10 0 0 1 9 4.1M22 12a10 10 0 0 1-13 9.9"/>
+            </svg>
+            加载收藏数据
+          </div>
+          <div class="step-desc">
+            点击同步图标加载数据。首次加载最近 50 条收藏，再次点击可加载全部数据。
+          </div>
+          <div class="step-tip">
+            <strong>支持分类：</strong>书籍、电影、剧集、音乐、游戏
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <div class="step-title">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            筛选与排序
+          </div>
+          <div class="step-desc">
+            使用顶部的筛选栏选择分类、状态和日期范围。点击任意海报卡片可以查看详细信息。
+          </div>
+          <div class="step-tip">
+            <strong>视图切换：</strong>By Month（按月分组）或 Flat（平铺展示）
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <div class="step-title">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            导出海报
+          </div>
+          <div class="step-desc">
+            点击 Export Poster 按钮，预览生成的海报效果，满意后点击下载 PNG 文件。
+          </div>
+          <div class="step-tip">
+            <strong>海报内容：</strong>标题、副标题、最多 12 张封面、统计信息，适合社交分享
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq">
+      <div class="faq-title">常见问题</div>
+
+      <div class="faq-item">
+        <div class="faq-q">支持哪些 NeoDB 实例？</div>
+        <div class="faq-a">默认支持 neodb.social，也支持自建实例，在设置中修改 Instance URL 即可。</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">海报导出失败怎么办？</div>
+        <div class="faq-a">确保网络连接正常，封面图片可访问。如果问题持续，可以尝试刷新页面后重试。</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">我的数据会上传到服务器吗？</div>
+        <div class="faq-a">不会。所有数据仅在浏览器本地处理，Token 也只保存在你的设备上。</div>
+      </div>
+    </div>
 
     <!-- Footer -->
-    <line x1="280" y1="880" x2="480" y2="880" stroke="var(--process)" stroke-width="2"/>
-    <text x="380" y="905" text-anchor="middle" class="subtitle">github.com/YULANcc/neodb-poster</text>
-
-    <!-- Arrow marker definition -->
-    <defs>
-      <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-        <path d="M0,0 L8,4 L0,8 Z" fill="var(--line)"/>
-      </marker>
-    </defs>
-  </svg>
-</main>
+    <div class="footer">
+      <div class="footer-divider"></div>
+      <p><a href="https://github.com/YULANcc/neodb-poster" target="_blank">github.com/YULANcc/neodb-poster</a></p>
+    </div>
+  </div>
+</body>
+</html>
