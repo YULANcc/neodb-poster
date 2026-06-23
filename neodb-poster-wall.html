@@ -219,11 +219,13 @@
       background: var(--bg-warm);
       border-radius: var(--radius);
       padding: 0 16px;
+      visibility: hidden;
     }
 
     .filter-panel.open {
-      max-height: 500px;
+      max-height: 800px;
       padding: 16px;
+      visibility: visible;
     }
 
     .filter-section {
@@ -248,6 +250,8 @@
       gap: 6px;
       flex-wrap: wrap;
     }
+
+    .filter-chips.hidden { display: none; }
 
     .filter-chip {
       padding: 6px 12px;
@@ -902,7 +906,7 @@
       .stat:last-child { padding-right: 0; border-right: none; }
       .stat-value { font-size: 18px; }
       .stat-label { font-size: 8px; }
-      .export-bar { padding: 0; flex-shrink: 0; }
+      .export-bar { padding: 0; flex-shrink: 0; justify-content: center; width: 100%; }
       .export-bar .btn { padding: 7px 16px; font-size: 12px; font-weight: 500; border-radius: var(--radius-lg); }
 
       .container { padding: 12px 16px 60px; }
@@ -1020,12 +1024,28 @@
     </div>
     <div class="filter-section">
       <div class="filter-section-label">时间</div>
+      <div class="filter-chips" id="dateModeRow">
+        <button class="filter-chip active" data-mode="presets">快捷</button>
+        <button class="filter-chip" data-mode="season">按季</button>
+        <button class="filter-chip" data-mode="custom">自定义</button>
+      </div>
       <div class="filter-chips" id="dateFilterRow">
         <button class="filter-chip active" data-date="all">全部</button>
         <button class="filter-chip" data-date="this-month">本月</button>
         <button class="filter-chip" data-date="last-month">上月</button>
         <button class="filter-chip" data-date="this-year">今年</button>
         <button class="filter-chip" data-date="last-year">去年</button>
+      </div>
+      <div class="filter-chips hidden" id="seasonFilterRow">
+        <button class="filter-chip" data-date="spring">春季</button>
+        <button class="filter-chip" data-date="summer">夏季</button>
+        <button class="filter-chip" data-date="autumn">秋季</button>
+        <button class="filter-chip" data-date="winter">冬季</button>
+      </div>
+      <div class="filter-chips hidden" id="customDateRow">
+        <input type="date" id="dateFrom" style="padding:3px 6px;border:1px solid var(--border);border-radius:4px;background:var(--bg);font-size:11px;font-family:inherit;">
+        <span style="font-size:11px;color:var(--ink-muted);">-</span>
+        <input type="date" id="dateTo" style="padding:3px 6px;border:1px solid var(--border);border-radius:4px;background:var(--bg);font-size:11px;font-family:inherit;">
       </div>
     </div>
     <div class="filter-divider"></div>
@@ -1935,8 +1955,45 @@
         document.querySelectorAll('#dateFilterRow .filter-chip').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         state.datePreset = btn.dataset.date;
+        state.dateFrom = ''; state.dateTo = '';
         applyFilters();
       });
+    });
+
+    // 日期模式切换
+    document.querySelectorAll('#dateModeRow .filter-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#dateModeRow .filter-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const mode = btn.dataset.mode;
+        document.getElementById('dateFilterRow').classList.toggle('hidden', mode !== 'presets');
+        document.getElementById('seasonFilterRow').classList.toggle('hidden', mode !== 'season');
+        document.getElementById('customDateRow').classList.toggle('hidden', mode !== 'custom');
+        if (mode === 'presets') {
+          state.datePreset = 'all';
+          document.querySelectorAll('#dateFilterRow .filter-chip').forEach(b => b.classList.remove('active'));
+          document.querySelector('#dateFilterRow [data-date="all"]').classList.add('active');
+        } else if (mode === 'season') {
+          state.datePreset = 'spring';
+          document.querySelectorAll('#seasonFilterRow .filter-chip').forEach(b => b.classList.remove('active'));
+          document.querySelector('#seasonFilterRow [data-date="spring"]').classList.add('active');
+        } else {
+          state.datePreset = 'all';
+        }
+        applyFilters();
+      });
+    });
+
+    // 自定义日期范围
+    document.getElementById('dateFrom').addEventListener('change', e => {
+      state.dateFrom = e.target.value;
+      if (state.dateFrom) state.datePreset = 'all';
+      applyFilters();
+    });
+    document.getElementById('dateTo').addEventListener('change', e => {
+      state.dateTo = e.target.value;
+      if (state.dateTo) state.datePreset = 'all';
+      applyFilters();
     });
 
     document.getElementById('viewGrouped').addEventListener('click', () => {
