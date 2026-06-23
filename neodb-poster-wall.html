@@ -116,20 +116,26 @@
     .help-link {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 6px 12px;
+      justify-content: center;
+      gap: 0;
+      padding: 8px 10px;
       font-size: 12px;
       font-weight: 500;
-      color: var(--accent);
+      color: var(--ink-muted);
       text-decoration: none;
-      border: 1px solid var(--accent);
+      border: none;
+      background: transparent;
       border-radius: var(--radius);
-      transition: all 0.15s ease;
+      transition: var(--transition);
     }
 
     .help-link:hover {
-      background: var(--accent);
-      color: #fff;
+      color: var(--ink);
+    }
+
+    .help-link svg {
+      width: 16px;
+      height: 16px;
     }
 
     .masthead-meta {
@@ -141,7 +147,7 @@
     .btn-label { display: none; }
 
     .btn {
-      padding: 8px 16px;
+      padding: 8px 10px;
       border-radius: var(--radius);
       border: none;
       font-size: 12px;
@@ -1022,7 +1028,7 @@
   </div>
 
   <div class="stats-bar" id="statsBar" style="display:none">
-    <div style="display:flex;gap:0;flex-wrap:wrap;">
+    <div class="stats-row" style="display:flex;gap:0;flex-wrap:wrap;align-items:center;justify-content:center;">
       <div class="stat"><span class="stat-value" id="statTotal">0</span><span class="stat-label">Total</span></div>
       <div class="stat"><span class="stat-value" id="statBook">0</span><span class="stat-label">Books</span></div>
       <div class="stat"><span class="stat-value" id="statMovie">0</span><span class="stat-label">Films</span></div>
