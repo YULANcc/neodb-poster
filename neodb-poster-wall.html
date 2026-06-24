@@ -767,45 +767,8 @@
       color: var(--ink);
     }
 
-    .modal-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
-
-    .modal-action-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 5px 12px;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--ink-secondary);
-      font-size: 11px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      font-family: 'Inter', sans-serif;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .modal-action-btn:hover {
-      border-color: var(--ink-muted);
-      color: var(--ink);
-      background: var(--bg-muted);
-    }
-
-    .modal-action-btn.accent {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .modal-action-btn.accent:hover {
-      background: var(--accent);
-      color: #fff;
+    .modal-footer-actions {
+      margin-top: 20px;
     }
 
     .modal-meta {
@@ -1632,13 +1595,6 @@
       renderGrid(items);
     }
 
-    function getItemUrl(item) {
-      if (item.url) return item.url;
-      if (item.uuid && item.category) return 'https://neodb.social/' + item.category + '/' + item.uuid;
-      if (item.id) return 'https://neodb.social/items/' + item.id;
-      return '';
-    }
-
     function openModal(mark) {
       const item = mark.item || {};
       const title = item.display_title || 'Unknown';
@@ -1650,10 +1606,6 @@
       const tags = mark.tags || [];
       const date = fmtDate(mark.created_time);
       const avgRating = item.rating || 0;
-      const neoDBUrl = getItemUrl(item);
-
-      // Store current mark for card export
-      window._currentModalMark = mark;
 
       modalContent.innerHTML = `
         <div class="modal-header">
@@ -1670,41 +1622,24 @@
             </div>
             ${rating ? `<div class="modal-rating" style="margin-bottom:4px">Your rating: ${rating}/10</div>` : ''}
             ${date ? `<div style="font-size:12px;color:var(--ink-muted)">Marked on ${date}</div>` : ''}
-            <div class="modal-actions">
-              ${neoDBUrl ? `<a href="${neoDBUrl}" target="_blank" rel="noopener" class="modal-action-btn" title="Open in NeoDB">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                NeoDB
-              </a>` : ''}
-              <button class="modal-action-btn" id="modalCopyLink" title="Copy link">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                Copy
-              </button>
-              <button class="modal-action-btn accent" id="modalExportCard" title="Export card as PNG">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Export
-              </button>
-            </div>
           </div>
         </div>
         <div class="modal-body">
           ${comment ? `<div class="modal-comment">${escapeHTML(comment)}</div>` : '<p style="color:var(--ink-muted);font-size:13px;margin-bottom:20px">No comment yet.</p>'}
           ${tags.length ? `<div class="modal-tags">${tags.map(t => `<span class="modal-tag">${escapeHTML(t)}</span>`).join('')}</div>` : ''}
+          <div class="modal-footer-actions">
+            <button class="btn btn-accent" id="modalExportCard" style="width:100%;justify-content:center;padding:10px 16px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Card
+            </button>
+          </div>
         </div>
       `;
 
-      // Wire up action buttons (deferred to next frame so DOM exists)
+      // Wire export button
       requestAnimationFrame(() => {
-        const copyBtn = document.getElementById('modalCopyLink');
-        const exportBtn = document.getElementById('modalExportCard');
-        if (copyBtn) {
-          copyBtn.addEventListener('click', () => {
-            const url = neoDBUrl || window.location.href;
-            navigator.clipboard.writeText(url).then(() => showToast('Link copied', 'success')).catch(() => showToast('Copy failed', 'error'));
-          });
-        }
-        if (exportBtn) {
-          exportBtn.addEventListener('click', () => exportCard(mark));
-        }
+        const btn = document.getElementById('modalExportCard');
+        if (btn) btn.addEventListener('click', () => exportCard(mark));
       });
 
       modal.classList.add('open');
@@ -1771,7 +1706,45 @@
       const cat = item.category || 'other';
       const status = mark.shelf_type || 'wishlist';
       const rating = mark.rating_grade || 0;
-      const CW = 400, CH = 600;
+      const comment = (mark.comment_text || '').trim();
+      const tags = mark.tags || [];
+      const dateStr = fmtDate(mark.created_time);
+      const avgRating = item.rating || 0;
+      const CW = 480;
+
+      const bodyPad = 24;
+      const bodyWidth = CW - bodyPad * 2;
+      const coverW = 100, coverH = 150;
+      const headerPad = 20;
+      const headerH = Math.max(coverH, 130);
+      const dividerY = headerPad + headerH + headerPad;
+
+      // Measure comment height
+      let commentH = 0;
+      if (comment) {
+        const tmp = document.createElement('canvas').getContext('2d');
+        tmp.font = '14px Georgia, "Playfair Display", serif';
+        commentH = wrapText(tmp, comment, bodyWidth, 30).length * 20;
+      }
+
+      // Estimate tags height
+      let tagsH = 0;
+      if (tags.length) {
+        const tmpc = document.createElement('canvas').getContext('2d');
+        tmpc.font = '10px -apple-system, sans-serif';
+        let rowW = 0, rows = 1;
+        const maxW = bodyWidth;
+        tags.forEach(t => {
+          const w = tmpc.measureText(t).width + 18;
+          if (rowW + w > maxW) { rows++; rowW = 0; }
+          rowW += w + 6;
+        });
+        tagsH = rows * 26 + 8;
+      }
+
+      const bodyH = (comment ? commentH + 20 : 28) + tagsH + 16;
+      const footerH = 48;
+      const CH = dividerY + bodyH + footerH;
 
       const canvas = document.createElement('canvas');
       canvas.width = CW * 2;
@@ -1780,100 +1753,139 @@
       ctx.scale(2, 2);
 
       // Background
-      ctx.fillStyle = '#faf7f2';
+      ctx.fillStyle = '#faf9f7';
       ctx.fillRect(0, 0, CW, CH);
 
-      // Try loading cover image
-      let img = null;
+      // Cover (left)
       if (cover) {
-        const proxied = 'https://images.weserv.nl/?url=' + encodeURIComponent(cover) + '&w=400&h=600&fit=cover';
-        img = await new Promise(resolve => {
-          const i = new Image();
-          i.crossOrigin = 'anonymous';
+        const proxied = 'https://images.weserv.nl/?url=' + encodeURIComponent(cover) + '&w=200&h=300&fit=cover';
+        const img = await new Promise(resolve => {
+          const i = new Image(); i.crossOrigin = 'anonymous';
           let settled = false;
           i.onload = () => { if (!settled) { settled = true; resolve(i); } };
           i.onerror = () => { if (!settled) { settled = true; resolve(null); } };
           setTimeout(() => { if (!settled) { settled = true; resolve(null); } }, 6000);
           i.src = proxied;
         });
-      }
-
-      if (img) {
-        // Object-fit: cover
-        const imgAR = img.width / img.height;
-        const cardAR = CW / CH;
-        let sx = 0, sy = 0, sw = img.width, sh = img.height;
-        if (imgAR > cardAR) { sw = img.height * cardAR; sx = (img.width - sw) / 2; }
-        else { sh = img.width / cardAR; sy = (img.height - sh) / 2; }
-        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, CW, CH);
+        if (img) {
+          ctx.save();
+          roundRect(ctx, headerPad, headerPad, coverW, coverH, 3);
+          ctx.clip();
+          const iA = img.width / img.height; const cA = coverW / coverH;
+          let sx = 0, sy = 0, sw = img.width, sh = img.height;
+          if (iA > cA) { sw = img.height * cA; sx = (img.width - sw) / 2; }
+          else { sh = img.width / cA; sy = (img.height - sh) / 2; }
+          ctx.drawImage(img, sx, sy, sw, sh, headerPad, headerPad, coverW, coverH);
+          ctx.restore();
+        } else {
+          ctx.fillStyle = '#f0ebe4';
+          roundRect(ctx, headerPad, headerPad, coverW, coverH, 3);
+          ctx.fill();
+          ctx.font = '32px serif'; ctx.fillStyle = 'rgba(42,34,24,0.2)'; ctx.textAlign = 'center';
+          ctx.fillText(catIcons[cat] || '\u{1F4E6}', headerPad + coverW / 2, headerPad + coverH / 2 + 10);
+          ctx.textAlign = 'left';
+        }
       } else {
         ctx.fillStyle = '#f0ebe4';
-        ctx.fillRect(0, 0, CW, CH);
-        ctx.font = '64px serif';
-        ctx.fillStyle = 'rgba(42,34,24,0.2)';
-        ctx.textAlign = 'center';
-        ctx.fillText(catIcons[cat] || '\u{1F4E6}', CW/2, CH/2 + 20);
+        roundRect(ctx, headerPad, headerPad, coverW, coverH, 3);
+        ctx.fill();
+        ctx.font = '32px serif'; ctx.fillStyle = 'rgba(42,34,24,0.2)'; ctx.textAlign = 'center';
+        ctx.fillText(catIcons[cat] || '\u{1F4E6}', headerPad + coverW / 2, headerPad + coverH / 2 + 10);
         ctx.textAlign = 'left';
       }
 
-      // Overlay gradient (bottom)
-      const grad = ctx.createLinearGradient(0, CH * 0.5, 0, CH);
-      grad.addColorStop(0, 'rgba(42,34,24,0)');
-      grad.addColorStop(0.5, 'rgba(42,34,24,0.35)');
-      grad.addColorStop(1, 'rgba(42,34,24,0.85)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, CW, CH);
-
-      // Category badge (top left)
-      ctx.font = '600 13px -apple-system, sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.9)';
-      const catW = ctx.measureText(catLabels[cat] || cat).width + 24;
-      ctx.fillStyle = 'rgba(255,255,255,0.88)';
-      roundRect(ctx, 16, 16, catW, 28, 6);
-      ctx.fill();
-      ctx.fillStyle = '#555';
-      ctx.font = '600 11px -apple-system, sans-serif';
-      ctx.fillText((catLabels[cat] || cat).toUpperCase(), 28, 35);
-
-      // Date badge (top right) — if available
-      const dateStr = mark.created_time;
+      // Info (right of cover)
+      const infoX = headerPad + coverW + 20;
+      const infoW = CW - infoX - headerPad;
+      ctx.fillStyle = '#111';
+      ctx.font = '600 16px Georgia, "Playfair Display", serif';
+      const titleLines = wrapText(ctx, title, infoW, 3);
+      let infoY = headerPad + 4;
+      titleLines.forEach(line => { ctx.fillText(line, infoX, infoY + 18); infoY += 22; });
+      infoY += 6;
+      // Category
+      ctx.fillStyle = '#555'; ctx.font = '11px -apple-system, sans-serif';
+      ctx.fillText(catLabels[cat] || cat, infoX, infoY);
+      infoY += 18;
+      // Community rating
+      if (avgRating) {
+        ctx.fillStyle = '#c45c3e'; ctx.font = '600 12px -apple-system, sans-serif';
+        ctx.fillText('\u2605 ' + avgRating, infoX, infoY);
+        ctx.fillStyle = '#999'; ctx.font = '11px -apple-system, sans-serif';
+        ctx.fillText(' \u00b7 ' + (item.rating_count || 0) + ' ratings', infoX + ctx.measureText('\u2605 ' + avgRating).width + 2, infoY + 1);
+        infoY += 18;
+      }
+      // Status
+      ctx.font = '10px -apple-system, sans-serif'; ctx.fillStyle = '#555';
+      ctx.fillText(statusLabels[status] || status, infoX, infoY);
+      infoY += 16;
+      // Your rating
+      if (rating) {
+        ctx.font = '11px -apple-system, sans-serif'; ctx.fillStyle = '#c45c3e';
+        ctx.fillText('Your rating: ' + rating + '/10', infoX, infoY);
+        infoY += 16;
+      }
+      // Date
       if (dateStr) {
-        const d = new Date(dateStr);
-        const fmt = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        ctx.font = '500 11px -apple-system, sans-serif';
-        const dW = ctx.measureText(fmt).width + 24;
-        ctx.fillStyle = 'rgba(255,255,255,0.85)';
-        roundRect(ctx, CW - dW - 16, 16, dW, 28, 6);
-        ctx.fill();
-        ctx.fillStyle = '#999';
-        ctx.fillText(fmt, CW - dW - 4, 35);
+        ctx.fillStyle = '#bbb'; ctx.font = '11px -apple-system, sans-serif';
+        ctx.fillText('Marked ' + dateStr, infoX, infoY);
       }
 
-      // Title (bottom, max 3 lines)
-      ctx.font = '600 17px Georgia, "Playfair Display", serif';
-      ctx.fillStyle = '#fff';
-      const titleLines = wrapText(ctx, title, CW - 40, 3);
-      titleLines.forEach((line, li) => {
-        ctx.fillText(line, 20, CH - 72 + li * 22);
-      });
+      // Divider
+      ctx.fillStyle = '#e5e3df';
+      ctx.fillRect(20, dividerY, CW - 40, 1);
 
-      // Status + rating
-      const star = rating ? '\u2605 ' + rating + ' \u00b7 ' : '';
-      const statusLabel = statusLabels[status] || status;
-      ctx.font = '12px -apple-system, sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.65)';
-      ctx.fillText(star + statusLabel, 20, CH - 24);
+      // Comment
+      let bodyCY = dividerY + 20;
+      if (comment) {
+        ctx.fillStyle = '#555';
+        ctx.font = '14px Georgia, "Playfair Display", serif';
+        const commentLines = wrapText(ctx, comment, bodyWidth, 30);
+        commentLines.forEach(line => { ctx.fillText(line, bodyPad, bodyCY + 16); bodyCY += 20; });
+        bodyCY += 6;
+      } else {
+        ctx.fillStyle = '#bbb'; ctx.font = '13px -apple-system, sans-serif';
+        ctx.fillText('No comment yet.', bodyPad, bodyCY + 16);
+        bodyCY += 28;
+      }
 
-      // Brand footer
+      // Tags
+      if (tags.length) {
+        bodyCY += 4;
+        let tagX = bodyPad, tagRowY = bodyCY;
+        const tagPad = 8;
+        ctx.font = '10px -apple-system, sans-serif';
+        tags.forEach(tag => {
+          const tagW = ctx.measureText(tag).width + tagPad * 2;
+          if (tagX + tagW > CW - bodyPad) { tagX = bodyPad; tagRowY += 26; }
+          ctx.fillStyle = '#f0eeea';
+          ctx.fillRect(tagX, tagRowY, tagW, 22);
+          ctx.strokeStyle = '#e5e3df'; ctx.lineWidth = 0.5;
+          ctx.strokeRect(tagX + 0.5, tagRowY + 0.5, tagW - 1, 21);
+          ctx.fillStyle = '#999';
+          ctx.fillText(tag, tagX + tagPad, tagRowY + 15);
+          tagX += tagW + 6;
+        });
+      }
+
+      // Footer
+      const footerY = CH - footerH + 14;
+      ctx.fillStyle = '#e5e3df';
+      ctx.fillRect(20, footerY - 4, CW - 40, 1);
       ctx.font = '9px -apple-system, sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.35)';
-      ctx.fillText('N E O D B  \u00b7  T H E  S H E L F', 20, CH - 10);
+      ctx.fillStyle = '#c09578';
+      ctx.fillText('N E O D B  \u00b7  T H E  S H E L F', 20, footerY + 12);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#bbb';
+      ctx.fillText('Exported ' + new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }), CW - 20, footerY + 12);
+      ctx.textAlign = 'left';
 
       canvas.toBlob(blob => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
+        const slug = title.replace(/[^a-zA-Z0-9\u4e00-\u9fff]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30) || 'card';
         a.href = url;
-        a.download = 'the-shelf-card.png';
+        a.download = 'the-shelf-' + slug + '.png';
         a.click();
         URL.revokeObjectURL(url);
         showToast('Card exported!', 'success');
