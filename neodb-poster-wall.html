@@ -1010,7 +1010,8 @@
       .toolbar, .sub-toolbar, .date-bar { display: none !important; }
       /* Show mobile filters */
       .mobile-filters { display: flex !important; flex-direction: column; padding: 4px 16px 12px; }
-      .mobile-filters .filter-toggle { align-self: flex-start; }
+      .mobile-filters .filter-toggle { display: none; }
+      .filter-toggle-btn { display: inline-flex !important; }
       .masthead-top { padding: 16px 16px 12px; }
       .masthead-eyebrow { font-size: 9px; letter-spacing: 2px; margin-bottom: 4px; }
       .masthead-title { font-size: 26px; }
@@ -1134,6 +1135,9 @@
             <button class="btn btn-text" id="loadBtn" title="Load Data">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6"></path><path d="M2.5 12A10 10 0 0 1 9 4.1M22 12a10 10 0 0 1-13 9.9"></path></svg>
               <span class="btn-label">Load Data</span>
+            </button>
+            <button class="btn btn-text filter-toggle-btn" id="filterToggleBtn" title="筛选" style="display:none">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
             </button>
           </div>
         </div>
@@ -2242,14 +2246,19 @@
     /* === Mobile filter events === */
 
     // 1. Filter toggle — expand/collapse filter panel
-    document.getElementById('filterToggle').addEventListener('click', () => {
+    document.getElementById('filterToggle').addEventListener('click', () => { toggleFilterPanel(); });
+    document.getElementById('filterToggleBtn').addEventListener('click', () => { toggleFilterPanel(); });
+
+    function toggleFilterPanel() {
       const panel = document.getElementById('filterPanel');
       const toggle = document.getElementById('filterToggle');
+      const toggleBtn = document.getElementById('filterToggleBtn');
       const label = document.getElementById('filterLabel');
       panel.classList.toggle('open');
-      toggle.classList.toggle('active');
+      if (toggle) toggle.classList.toggle('active');
+      if (toggleBtn) toggleBtn.classList.toggle('active');
       if (label) label.textContent = panel.classList.contains('open') ? '收起' : '筛选';
-    });
+    }
 
     // 2. Category filter (mobile)
     document.querySelectorAll('#catFilterRowMobile [data-cat]').forEach(btn => {
