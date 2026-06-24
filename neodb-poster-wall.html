@@ -2100,7 +2100,7 @@
 
     document.getElementById('instanceUrl').value = state.instance;
     document.getElementById('accessToken').value = state.token;
-    async function doLoad(full = false) {
+    async function doLoad() {
       state.instance = document.getElementById('instanceUrl').value.trim();
       state.token = document.getElementById('accessToken').value.trim();
       localStorage.setItem('neodb_instance', state.instance);
@@ -2116,38 +2116,41 @@
       grid.innerHTML = '';
       empty.style.display = 'none';
       loadBtn.disabled = true;
-      loadBtn.querySelector('.btn-label').textContent = full ? 'Loading...' : 'Loading (Recent)...';
+      loadBtn.querySelector('.btn-label').textContent = 'Loading...';
 
       try {
         const me = await apiGet('/api/me');
         const name = me.display_name || me.external_acct || 'NeoDB User';
-        mastheadMeta.textContent = `Signed in as ${name}`;
-        showToast(`Connected as ${name}`, 'success');
+        mastheadMeta.textContent = 'Signed in as ' + name;
+        showToast('Connected as ' + name, 'success');
 
+        // Phase 1: quick recent marks
         state.items = await loadRecentMarks();
         state.hasLoaded = true;
         loading.style.display = 'none';
         applyFilters();
-        showToast(`Loaded ${state.items.length} recent items. Click Load Data again for all.`, 'success');
 
-        if (full) {
-          loadBtn.querySelector('.btn-label').textContent = 'Loading all...';
-          const allItems = await loadAllMarks();
-          state.items = allItems;
-          applyFilters();
-          showToast(`Loaded all ${allItems.length} items`, 'success');
-        }
+        // Phase 2: auto-load full collection in background
+        const allItems = await loadAllMarks();
+        state.items = allItems;
+        applyFilters();
+        showToast('Loaded all ' + allItems.length + ' items', 'success');
       } catch (err) {
         loading.style.display = 'none';
-        showToast('Failed to load: ' + err.message, 'error');
+        if (state.hasLoaded) {
+          // Already rendered recent marks; background load failed — user still has data
+          showToast('Full collection load failed, showing recent items only', 'error');
+        } else {
+          showToast('Failed to load: ' + err.message, 'error');
+        }
         console.error(err);
       } finally {
         loadBtn.disabled = false;
-        loadBtn.querySelector('.btn-label').textContent = 'Load Data';
+        loadBtn.querySelector('.btn-label').textContent = 'Refresh';
       }
     }
 
-    document.getElementById('loadBtn').addEventListener('click', () => doLoad(state.hasLoaded));
+    document.getElementById('loadBtn').addEventListener('click', () => doLoad());
     document.getElementById('emptyLoadBtn').addEventListener('click', () => {
       settingsDrawer.classList.add('open');
       document.getElementById('accessToken').focus();
@@ -2246,7 +2249,7 @@
     state.groupByMonth = true;
     updateViewButtons();
     if (state.token) {
-      doLoad(false);
+      doLoad();
     } else {
       empty.style.display = 'block';
     }
