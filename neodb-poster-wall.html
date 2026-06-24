@@ -235,16 +235,7 @@
       flex-shrink: 0;
     }
 
-    .sub-toolbar {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 16px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
+    .sub-toolbar { display: none; }
 
     .sub-toolbar-left { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
     .sub-toolbar-right { display: flex; align-items: center; gap: 12px; }
@@ -897,6 +888,7 @@
       padding: 28px;
       max-height: 90vh;
       overflow-y: auto;
+      overflow-x: hidden;
     }
 
     .poster-export-dialog h3 {
@@ -920,6 +912,8 @@
       padding: 20px;
       overflow: hidden;
     }
+
+    .poster-preview-wrap img { max-width: 100%; }
 
     .poster-preview-wrap .poster-scale-container {
       position: relative;
@@ -1011,14 +1005,15 @@
       /* Hide desktop filters on mobile */
       .toolbar, .sub-toolbar, .date-bar { display: none !important; }
       /* Show mobile filters */
-      .mobile-filters { display: block; padding: 12px 16px; }
-      .masthead-top { padding: 20px 16px 16px; }
+      .mobile-filters { display: flex !important; flex-direction: column; padding: 4px 16px 12px; }
+      .mobile-filters .filter-toggle { align-self: flex-start; }
+      .masthead-top { padding: 16px 16px 12px; }
       .masthead-eyebrow { font-size: 9px; letter-spacing: 2px; margin-bottom: 4px; }
-      .masthead-title { font-size: 24px; }
+      .masthead-title { font-size: 26px; }
       .masthead-sub { font-size: 11px; margin-top: 2px; }
-      .masthead-inner { flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: nowrap; }
-      .masthead-left { flex: 1; min-width: 0; }
-      .masthead-right { align-items: flex-start; width: auto; flex-shrink: 0; }
+      .masthead-inner { flex-direction: column; align-items: stretch; gap: 8px; }
+      .masthead-left { width: 100%; }
+      .masthead-right { width: 100%; display: flex; justify-content: space-between; align-items: center; }
       .masthead-actions {
       display: flex;
       align-items: center;
@@ -1054,14 +1049,14 @@
       .date-preset { padding: 3px 8px; font-size: 10px; white-space: nowrap; }
       .date-preset-group { flex-wrap: nowrap; }
 
-      .stats-bar { padding: 12px 16px; flex-direction: column; gap: 12px; align-items: stretch; }
+      .stats-bar { padding: 12px 16px; flex-direction: column; gap: 12px; align-items: center; }
       .stats-bar::-webkit-scrollbar { display: none; }
       .stat { padding: 0 8px; border-right: 1px solid var(--border); flex-shrink: 0; }
       .stat:first-child { padding-left: 0; }
       .stat:last-child { padding-right: 0; border-right: none; }
       .stat-value { font-size: 18px; }
       .stat-label { font-size: 8px; }
-      .export-bar { padding: 0; flex-shrink: 0; }
+      .export-bar { padding: 0; flex-shrink: 0; justify-content: center; width: 100%; }
       .export-bar .btn { padding: 7px 16px; font-size: 12px; font-weight: 500; border-radius: var(--radius-lg); }
 
       .container { padding: 12px 16px 60px; }
@@ -1087,9 +1082,11 @@
       .modal-rating { justify-content: center; }
       .modal { max-width: calc(100vw - 32px); }
 
-      .poster-export-dialog { padding: 20px; max-width: calc(100vw - 32px); max-height: 85vh; overflow-y: auto; }
+      .poster-export-dialog { padding: 16px; max-width: calc(100vw - 16px); max-height: 85vh; overflow-x: hidden; overflow-y: auto; }
       .poster-export-dialog h3 { font-size: 18px; }
-      .poster-preview-wrap { padding: 12px; overflow: visible; }
+      .poster-preview-wrap { padding: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .poster-preview-wrap img { max-width: 100%; height: auto; display: block; }
+      .poster-preview-wrap .poster-scale-container { transform: none !important; width: 100%; }
       .poster-export-actions { flex-direction: column; gap: 8px; }
       .poster-export-actions .btn { width: 100%; justify-content: center; }
     }
@@ -1120,6 +1117,10 @@
         </div>
         <div class="masthead-right">
           <div class="masthead-actions">
+            <button class="btn btn-text" id="viewToggleBtn" title="切换视图">
+              <svg id="viewToggleIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+              <span class="btn-label" id="viewToggleLabel">Grid</span>
+            </button>
             <a href="guide.html" class="help-link" title="使用指南">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
             </a>
@@ -1389,6 +1390,7 @@
     function updateViewButtons() {
       document.getElementById('viewGrouped').classList.toggle('active', state.groupByMonth);
       document.getElementById('viewFlat').classList.toggle('active', !state.groupByMonth);
+      updateViewToggleUI();
     }
 
     function getAuthPrefix() {
@@ -2386,6 +2388,31 @@
       document.getElementById('viewFlatMobile').classList.add('active');
       applyFilters();
     });
+
+    /* === Desktop view toggle button (in masthead) === */
+    document.getElementById('viewToggleBtn').addEventListener('click', () => {
+      state.groupByMonth = !state.groupByMonth;
+      updateViewToggleUI();
+      applyFilters();
+    });
+
+    function updateViewToggleUI() {
+      const btn = document.getElementById('viewToggleBtn');
+      const icon = document.getElementById('viewToggleIcon');
+      const label = document.getElementById('viewToggleLabel');
+      if (state.groupByMonth) {
+        icon.innerHTML = '<rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect>';
+        label.textContent = 'Grid';
+      } else {
+        icon.innerHTML = '<line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line>';
+        label.textContent = 'Flat';
+      }
+      // Sync mobile view chips
+      const vg = document.getElementById('viewGroupedMobile');
+      const vf = document.getElementById('viewFlatMobile');
+      if (vg) { vg.classList.toggle('active', state.groupByMonth); }
+      if (vf) { vf.classList.toggle('active', !state.groupByMonth); }
+    }
 
 </script>
 </body>
