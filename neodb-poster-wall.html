@@ -1320,7 +1320,12 @@
   <div class="poster-export-overlay" id="posterExportOverlay">
     <div class="poster-export-dialog" style="max-width:960px;">
       <h3>Poster Ready</h3>
-      <p>You can take a screenshot, or click Download for a PNG file.</p>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="font-size:11px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:1px;">Items</span>
+        <button class="filter-chip" id="exportCount20" style="font-size:11px;padding:4px 12px;">20</button>
+        <button class="filter-chip" id="exportCount50" style="font-size:11px;padding:4px 12px;">50</button>
+        <button class="filter-chip" id="exportCountAll" style="font-size:11px;padding:4px 12px;">All</button>
+      </div>
       <div class="poster-preview-wrap" id="posterPreviewWrap"></div>
       <div class="poster-export-actions">
         <button class="btn btn-outline" id="posterExportClose">Close</button>
@@ -1359,6 +1364,7 @@
       instance: localStorage.getItem('neodb_instance') || 'https://neodb.social',
       token: loadToken(),
       hasLoaded: false,
+      exportCount: 20,
     };
 
     const statusLabels = { wishlist: 'Wishlist', progress: 'Progress', complete: 'Complete', dropped: 'Dropped' };
@@ -1892,16 +1898,14 @@
       }, 'image/png');
     }
 
-    async function exportPoster() {
-      if (state.filtered.length === 0) {
-        showToast('Nothing to export', 'error');
-        return;
-      }
+    function getExportItems() {
+      if (state.exportCount === 0) return state.filtered;
+      return state.filtered.slice(0, state.exportCount);
+    }
 
-      document.getElementById('exportBtn').disabled = true;
-
+    function renderPosterPreview() {
       const filteredItems = state.filtered;
-      const items = filteredItems.slice(0, 20);
+      const items = getExportItems();
 
       const stats = { total: filteredItems.length, book: 0, movie: 0, tv: 0, music: 0, game: 0, ratings: [] };
       filteredItems.forEach(m => {
@@ -1910,7 +1914,6 @@
         if (m.rating_grade) stats.ratings.push(m.rating_grade);
       });
 
-      // Build poster with original image URLs (works immediately, no proxy needed for display)
       const posterTitle = getPosterTitle(filteredItems);
       const subParts = [];
       if (state.filterCat !== 'all') subParts.push(catLabels[state.filterCat] || state.filterCat);
@@ -1937,8 +1940,8 @@
         '<div style="text-align:right;"><div style="font-family:serif;font-size:22px;font-weight:600;color:#2a2218;line-height:1;">' + s.value + '</div><div style="font-size:9px;color:#c09578;text-transform:uppercase;letter-spacing:1.5px;margin-top:2px;">' + s.label + '</div></div>'
       ).join('');
 
-            // Scale BEFORE opening the overlay to prevent flash of unstyled content.
-      // Use transform: scale() for broad browser compatibility (zoom is non-standard).
+      posterPreviewWrap.innerHTML = '';
+
       const posterHTML = '<div id="poster-render-target" style="background:#faf7f2;color:#2a2218;font-family:Inter,-apple-system,sans-serif;width:900px;overflow:hidden;">'
         + '<div style="padding:48px 48px 32px;position:relative;">'
         + '<div style="position:absolute;top:32px;right:48px;font-size:72px;opacity:0.06;pointer-events:none;line-height:1;">*</div>'
@@ -1951,29 +1954,63 @@
         + '<div style="padding:20px 48px;border-top:1px solid rgba(180,140,100,0.18);display:flex;justify-content:space-between;align-items:center;">'
         + '<div style="font-size:11px;color:#c09578;letter-spacing:1.5px;text-transform:uppercase;">* GENERATED FROM NEODB</div>'
         + '<div style="display:flex;gap:24px;">' + footerStatHTML + '</div>'
-        + '</div></div>';posterPreviewWrap.innerHTML = posterHTML;
+        + '</div></div>';
+      posterPreviewWrap.innerHTML = posterHTML;
 
-      // Apply zoom BEFORE opening the overlay to prevent flash of unstyled content
+      // Scale to fit
       const target = posterPreviewWrap.querySelector('#poster-render-target');
       if (target) {
         const wrapW = posterPreviewWrap.clientWidth - 40;
         const scale = Math.min(wrapW / 900, 1);
-        
-        // Create a wrapper to contain the scaled poster
         const wrapper = document.createElement('div');
         wrapper.className = 'poster-scale-container';
         wrapper.style.width = (900 * scale) + 'px';
         wrapper.style.height = (target.scrollHeight * scale) + 'px';
         wrapper.style.margin = '0 auto';
         wrapper.style.overflow = 'hidden';
-        
-        // Move target into wrapper
         target.parentNode.insertBefore(wrapper, target);
         wrapper.appendChild(target);
-        
         target.style.transform = 'scale(' + scale + ')';
         target.style.transformOrigin = 'top left';
       }
+    }
+
+    async function exportPoster() {
+      if (state.filtered.length === 0) {
+        showToast('Nothing to export', 'error');
+        return;
+      }
+
+      document.getElementById('exportBtn').disabled = true;
+
+      // Render initial preview
+      renderPosterPreview();
+
+      // Wire count selector buttons
+      const countOptions = [
+        { id: 'exportCount20', val: 20 },
+        { id: 'exportCount50', val: 50 },
+        { id: 'exportCountAll', val: 0 },
+      ];
+      function updateCountUI() {
+        countOptions.forEach(opt => {
+          const btn = document.getElementById(opt.id);
+          if (btn) {
+            btn.classList.toggle('active', state.exportCount === opt.val);
+          }
+        });
+      }
+      countOptions.forEach(opt => {
+        const btn = document.getElementById(opt.id);
+        if (btn) {
+          btn.onclick = () => {
+            state.exportCount = opt.val;
+            updateCountUI();
+            renderPosterPreview();
+          };
+        }
+      });
+      updateCountUI();
 
       posterExportOverlay.classList.add('open');
 
@@ -1991,7 +2028,7 @@
           const COL_W = (GRID_W - GAP * (COLS - 1)) / COLS;
           const ROW_H = CELL_H;
 
-          const filteredItems = state.filtered.slice(0, 20);
+          const items = getExportItems();
           const stats = { total: state.filtered.length, book: 0, movie: 0, tv: 0, music: 0, game: 0, ratings: [] };
           state.filtered.forEach(m => {
             const cat = m.item?.category || 'other';
@@ -2020,7 +2057,7 @@
           const headerContentH = 14 + labelH + 10 + titleH + 22 + subH + 3;
 
           // Grid rows
-          const rowCount = Math.ceil(filteredItems.length / COLS);
+          const rowCount = Math.ceil(items.length / COLS);
           const gridH = rowCount * ROW_H + (rowCount - 1) * GAP;
 
           // Total height: top padding + header content + header-bottom padding + grid + footer padding(20) + footer content(56) + bottom padding(20)
@@ -2086,7 +2123,7 @@
             img.src = src;
           });
 
-          const cellData = filteredItems.slice(0, 20).map((mark, i) => {
+          const cellData = items.slice(0, state.exportCount || items.length).map((mark, i) => {
             const col = i % COLS;
             const row = Math.floor(i / COLS);
             const x = PADDING + col * (COL_W + GAP);
@@ -2253,9 +2290,7 @@
         }
       };
 
-      posterExportOverlay.classList.add('open');
-
-      // Re-apply scale after layout settles (e.g. image load changes height)
+      // Debounced re-render on resize
       setTimeout(() => {
         const target = posterPreviewWrap.querySelector('#poster-render-target');
         if (!target) return;
