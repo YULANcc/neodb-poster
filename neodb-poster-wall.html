@@ -121,20 +121,23 @@
     .help-link {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 6px 12px;
+      justify-content: center;
+      min-width: 36px;
+      min-height: 36px;
+      padding: 8px 10px;
       font-size: 12px;
-      font-weight: 500;
-      color: var(--accent);
+      color: var(--ink-muted);
       text-decoration: none;
-      border: 1px solid var(--accent);
+      border: none;
+      background: transparent;
       border-radius: var(--radius);
       transition: all 0.15s ease;
+      cursor: pointer;
     }
 
     .help-link:hover {
-      background: var(--accent);
-      color: #fff;
+      color: var(--ink);
+      background: var(--bg-muted);
     }
 
     .masthead-meta {
@@ -442,6 +445,9 @@
     .export-bar {
       display: flex;
       align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 0 0 16px;
     }
 
     .stats-bar {
@@ -449,11 +455,9 @@
       margin: 0 auto;
       padding: 16px 32px;
       display: flex;
-      gap: 0;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 12px;
       align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
     }
 
     .stat {
@@ -1100,7 +1104,7 @@
       .date-mode-group { width: 100%; border-right: none; border-bottom: 1px solid var(--border); margin-right: 0; padding-right: 0; padding-bottom: 6px; margin-bottom: 2px; }
       .date-preset-group { width: 100%; }
       .stats-bar { flex-direction: column; gap: 12px; align-items: stretch; }
-      .export-bar { width: 100%; justify-content: flex-start; margin-top: 4px; }
+      .export-bar { width: 100%; justify-content: center; margin-top: 4px; }
     }
 </style>
 </head>
