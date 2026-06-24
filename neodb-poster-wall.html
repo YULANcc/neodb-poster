@@ -1146,7 +1146,7 @@
         <div class="field">
           <label>Access Token</label>
           <input type="password" id="accessToken" placeholder="Paste your OAuth token">
-          <p class="field-hint">Settings → Developer → Create App</p>
+          <p class="field-hint">Settings → Developer → Create App. Token stored locally with obfuscation — never leave your device.</p>
         </div>
 
       </div>
@@ -1328,6 +1328,21 @@
   <div class="toast" id="toast"></div>
 
   <script>
+    // Token stored as base64-obfuscated (not plaintext). Prevents casual exposure in localStorage.
+    function decodeStored(s) { try { return atob(s); } catch(_) { return s; } }
+    function encodeStore(s) { try { return btoa(s); } catch(_) { return s; } }
+    const LEGACY_TOKEN_KEY = 'neodb_token';
+    const TOKEN_KEY = 'neodb_token_v1';
+    function loadToken() {
+      const v1 = localStorage.getItem(TOKEN_KEY);
+      if (v1) return decodeStored(v1);
+      // Migrate legacy plaintext token to obfuscated storage
+      const legacy = localStorage.getItem(LEGACY_TOKEN_KEY);
+      if (legacy) { localStorage.setItem(TOKEN_KEY, encodeStore(legacy)); localStorage.removeItem(LEGACY_TOKEN_KEY); return legacy; }
+      return '';
+    }
+    function saveToken(v) { localStorage.setItem(TOKEN_KEY, encodeStore(v)); }
+
     const state = {
       items: [],
       filtered: [],
@@ -1338,7 +1353,7 @@
       dateTo: '',
       groupByMonth: true,
       instance: localStorage.getItem('neodb_instance') || 'https://neodb.social',
-      token: localStorage.getItem('neodb_token') || '',
+      token: loadToken(),
       hasLoaded: false,
     };
 
@@ -2089,7 +2104,7 @@
       state.instance = document.getElementById('instanceUrl').value.trim();
       state.token = document.getElementById('accessToken').value.trim();
       localStorage.setItem('neodb_instance', state.instance);
-      localStorage.setItem('neodb_token', state.token);
+      saveToken(state.token);
 
       if (!state.token) {
         showToast('Please enter your Access Token', 'error');
