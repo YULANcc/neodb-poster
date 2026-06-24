@@ -662,13 +662,36 @@
 
     .loading {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 100px;
+      padding: 40px;
       color: var(--ink-muted);
       font-size: 13px;
       gap: 10px;
       letter-spacing: 0.5px;
+      width: 100%;
+    }
+
+    .skeleton-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 20px;
+      width: 100%;
+      padding: 0;
+    }
+
+    .skeleton-card {
+      aspect-ratio: 2/3;
+      border-radius: var(--radius-lg);
+      background: var(--bg-muted);
+      animation: skeleton-shimmer 1.6s ease-in-out infinite;
+    }
+
+    @keyframes skeleton-shimmer {
+      0% { opacity: 0.5; }
+      50% { opacity: 1; }
+      100% { opacity: 0.5; }
     }
 
     .spinner {
@@ -1295,8 +1318,8 @@
 
   <main class="container" id="posterContainer">
     <div id="loading" class="loading" style="display:none">
-      <div class="spinner">✦</div>
-      Loading your collection...
+      <div class="skeleton-grid"></div>
+      <div style="font-size:12px;color:var(--ink-faint);">Loading your collection...</div>
     </div>
     <div id="grid" class="poster-grid"></div>
     <div id="empty" class="empty" style="display:none">
@@ -1374,6 +1397,7 @@
 
     const grid = document.getElementById('grid');
     const loading = document.getElementById('loading');
+    const skeletonGrid = loading.querySelector('.skeleton-grid');
     const empty = document.getElementById('empty');
     const statsBar = document.getElementById('statsBar');
     const exportBar = document.getElementById('exportBar');
@@ -1398,10 +1422,13 @@
     function fmtMonth(d) { return d ? new Date(d).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : ''; }
     function monthKey(d) { if (!d) return ''; const dt = new Date(d); return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`; }
 
-    function escapeHTML(str) {
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
+    function renderSkeletons() {
+      const cols = Math.max(2, Math.floor(window.innerWidth / 180));
+      let html = '';
+      for (let i = 0; i < cols * 2; i++) {
+        html += '<div class="skeleton-card" style="animation-delay:' + (i * 0.12).toFixed(2) + 's"></div>';
+      }
+      skeletonGrid.innerHTML = html;
     }
 
     function getCoverStyle(title) {
@@ -2374,6 +2401,7 @@
       }
 
       loading.style.display = 'flex';
+      renderSkeletons();
       grid.innerHTML = '';
       empty.style.display = 'none';
       loadBtn.disabled = true;
