@@ -86,7 +86,7 @@
       font-family: 'Playfair Display', Georgia, serif;
       font-size: 44px;
       font-weight: 700;
-      font-style: italic;
+      font-style: normal;
       letter-spacing: -0.5px;
       line-height: 1.1;
       color: var(--ink);
@@ -96,7 +96,7 @@
     .masthead-sub {
       font-family: 'Playfair Display', Georgia, serif;
       font-size: 14px;
-      font-style: italic;
+      font-style: normal;
       color: var(--ink-secondary);
       margin-top: 0;
       font-weight: 400;
@@ -1012,27 +1012,20 @@
       .mobile-filters { display: flex !important; flex-direction: column; padding: 4px 16px 12px; }
       .mobile-filters .filter-toggle { display: none; }
       .filter-toggle-btn { display: inline-flex !important; }
-      .masthead-top { padding: 16px 16px 12px; }
-      .masthead-eyebrow { font-size: 9px; letter-spacing: 2px; margin-bottom: 4px; }
-      .masthead-title { font-size: 26px; }
-      .masthead-sub { font-size: 11px; margin-top: 2px; }
-      .masthead-inner { flex-direction: column; align-items: stretch; gap: 8px; }
-      .masthead-left { width: 100%; }
-      .masthead-right { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-      .masthead-actions {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 6px 10px;
-      background: var(--bg-warm);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-    }
-    .masthead-actions .btn { padding: 8px 12px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: var(--ink-muted); border-radius: var(--radius); transition: all 0.15s ease; min-width: 36px; min-height: 36px; cursor: pointer; }
-    .masthead-actions .btn:hover { color: var(--ink); background: var(--bg-muted); }
-    .masthead-actions .btn svg { width: 16px; height: 16px; }
-    .masthead-actions .btn .btn-label { display: none; }
-    .masthead-meta { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.3px; }
+      .masthead-top { padding: 20px 16px 16px; }
+      .masthead-eyebrow { font-size: 10px; letter-spacing: 3px; margin-bottom: 6px; }
+      .masthead-title { font-size: 32px; font-style: normal; text-align: center; }
+      .masthead-sub { font-size: 11px; margin-top: 4px; text-align: center; }
+      .masthead-inner { flex-direction: column; align-items: center; gap: 12px; }
+      .masthead-left { width: 100%; text-align: center; }
+      .masthead-right { width: 100%; }
+      .masthead-meta { display: none; }
+      .masthead-actions { display: flex; align-items: center; gap: 12px; justify-content: center; width: 100%; background: transparent; border: none; padding: 0; }
+      .masthead-actions .btn { min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: var(--ink-muted); border-radius: var(--radius); transition: all 0.15s ease; cursor: pointer; padding: 8px; }
+      .masthead-actions .btn:hover { color: var(--ink); background: var(--bg-muted); }
+      .masthead-actions .btn svg { width: 20px; height: 20px; }
+      .masthead-actions .btn .btn-label { display: none; }
+      .masthead-actions #viewToggleBtn { display: none; }
 
       .toolbar { padding: 12px 16px; flex-direction: column; align-items: stretch; gap: 12px; }
       .filter-row { gap: 6px; justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
