@@ -1723,7 +1723,7 @@
       let commentH = 0;
       if (comment) {
         const tmp = document.createElement('canvas').getContext('2d');
-        tmp.font = 'italic 15px Georgia, "Playfair Display", serif';
+        tmp.font = '15px Georgia, serif';
         commentH = wrapText(tmp, comment, bodyWidth, 30).length * 20;
       }
 
@@ -1839,7 +1839,7 @@
       let bodyCY = dividerY + 20;
       if (comment) {
         ctx.fillStyle = '#555';
-        ctx.font = 'italic 15px Georgia, "Playfair Display", serif';
+        ctx.font = '15px Georgia, serif';
         const commentLines = wrapText(ctx, comment, bodyWidth, 30);
         commentLines.forEach(line => { ctx.fillText(line, bodyPad, bodyCY + 16); bodyCY += 20; });
         bodyCY += 6;
