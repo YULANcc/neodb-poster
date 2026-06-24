@@ -684,14 +684,14 @@
     .skeleton-card {
       aspect-ratio: 2/3;
       border-radius: var(--radius-lg);
-      background: var(--bg-muted);
-      animation: skeleton-shimmer 1.6s ease-in-out infinite;
+      background: linear-gradient(90deg, var(--bg-muted) 25%, rgba(0,0,0,0.04) 50%, var(--bg-muted) 75%);
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 1.4s ease-in-out infinite;
     }
 
     @keyframes skeleton-shimmer {
-      0% { opacity: 0.5; }
-      50% { opacity: 1; }
-      100% { opacity: 0.5; }
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
     .spinner {
@@ -1124,7 +1124,7 @@
       .date-bar { flex-wrap: wrap; gap: 4px; }
       .date-mode-group { width: 100%; border-right: none; border-bottom: 1px solid var(--border); margin-right: 0; padding-right: 0; padding-bottom: 6px; margin-bottom: 2px; }
       .date-preset-group { width: 100%; }
-      .stats-bar { flex-direction: column; gap: 12px; align-items: stretch; }
+      .stats-bar { flex-direction: column; gap: 12px; align-items: center; }
       .export-bar { width: 100%; justify-content: center; margin-top: 4px; }
     }
 </style>
@@ -1301,7 +1301,7 @@
   </div>
 
   <div class="stats-bar" id="statsBar" style="display:none">
-    <div style="display:flex;gap:0;flex-wrap:wrap;">
+    <div style="display:flex;gap:0;flex-wrap:wrap;justify-content:center;">
       <div class="stat"><span class="stat-value" id="statTotal">0</span><span class="stat-label">Total</span></div>
       <div class="stat"><span class="stat-value" id="statBook">0</span><span class="stat-label">Books</span></div>
       <div class="stat"><span class="stat-value" id="statMovie">0</span><span class="stat-label">Films</span></div>
@@ -1423,10 +1423,14 @@
     function monthKey(d) { if (!d) return ''; const dt = new Date(d); return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`; }
 
     function renderSkeletons() {
-      const cols = Math.max(2, Math.floor(window.innerWidth / 180));
+      const isMobile = window.innerWidth < 768;
+      const cardMin = isMobile ? 100 : 160;
+      const cols = Math.max(isMobile ? 3 : 4, Math.floor(window.innerWidth / (cardMin + 20)));
+      skeletonGrid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+      skeletonGrid.style.gap = isMobile ? '8px' : '20px';
       let html = '';
       for (let i = 0; i < cols * 2; i++) {
-        html += '<div class="skeleton-card" style="animation-delay:' + (i * 0.12).toFixed(2) + 's"></div>';
+        html += '<div class="skeleton-card" style="animation-delay:' + (i * 0.08).toFixed(2) + 's"></div>';
       }
       skeletonGrid.innerHTML = html;
     }
