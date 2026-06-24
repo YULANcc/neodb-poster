@@ -350,6 +350,80 @@
     }
     .date-preset-group.hidden { display: none; }
 
+    /* ======== Mobile-Only Filters (hidden on desktop) ======== */
+    .mobile-filters { display: none; }
+
+    .filter-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-dark);
+      background: transparent;
+      color: var(--ink-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+    .filter-toggle:hover { border-color: var(--ink-muted); color: var(--ink); }
+    .filter-toggle.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+    .filter-panel {
+      width: 100%;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      background: var(--bg-warm);
+      border-radius: var(--radius);
+      padding: 0 16px;
+      visibility: hidden;
+    }
+    .filter-panel.open { max-height: 1000px; padding: 16px; visibility: visible; }
+
+    .filter-section { margin-bottom: 20px; }
+    .filter-section:last-child { margin-bottom: 0; }
+
+    .filter-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .custom-date-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .custom-date-row input[type="date"] {
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg);
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .custom-date-row span { font-size: 12px; color: var(--ink-muted); }
+
+    .filter-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0;
+    }
+
     .date-range {
       display: flex;
       align-items: center;
@@ -934,6 +1008,10 @@
 
     /* Mobile responsive */
     @media (max-width: 768px) {
+      /* Hide desktop filters on mobile */
+      .toolbar, .sub-toolbar, .date-bar { display: none !important; }
+      /* Show mobile filters */
+      .mobile-filters { display: block; padding: 12px 16px; }
       .masthead-top { padding: 20px 16px 16px; }
       .masthead-eyebrow { font-size: 9px; letter-spacing: 2px; margin-bottom: 4px; }
       .masthead-title { font-size: 24px; }
@@ -1124,6 +1202,71 @@
         <input type="date" id="dateFrom">
         <span>-</span>
         <input type="date" id="dateTo">
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-filters" id="mobileFilters">
+    <button class="filter-toggle" id="filterToggle">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+      </svg>
+      <span id="filterLabel">筛选</span>
+    </button>
+    <div class="filter-panel" id="filterPanel">
+      <div class="filter-section">
+        <div class="filter-section-label">分类</div>
+        <div class="filter-chips" id="catFilterRowMobile">
+          <button class="filter-chip active" data-cat="all">All</button>
+          <button class="filter-chip" data-cat="book">📖</button>
+          <button class="filter-chip" data-cat="movie">🎬</button>
+          <button class="filter-chip" data-cat="tv">📺</button>
+          <button class="filter-chip" data-cat="music">🎵</button>
+          <button class="filter-chip" data-cat="game">🎮</button>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-section-label">状态</div>
+        <div class="filter-chips" id="statusFilterRowMobile">
+          <button class="filter-chip active" data-status="all">全部</button>
+          <button class="filter-chip" data-status="wishlist">想读/看</button>
+          <button class="filter-chip" data-status="progress">进行中</button>
+          <button class="filter-chip" data-status="complete">已完成</button>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-section-label">时间</div>
+        <div class="date-mode-row" style="display:flex;gap:6px;margin-bottom:10px;">
+          <button class="filter-chip date-mode-btn active" data-mode="presets">快捷</button>
+          <button class="filter-chip date-mode-btn" data-mode="season">按季</button>
+          <button class="filter-chip date-mode-btn" data-mode="custom">自定义</button>
+        </div>
+        <div class="filter-chips" id="dateFilterRowMobile">
+          <button class="filter-chip active" data-date="all">全部</button>
+          <button class="filter-chip" data-date="this-month">本月</button>
+          <button class="filter-chip" data-date="last-month">上月</button>
+          <button class="filter-chip" data-date="this-year">今年</button>
+          <button class="filter-chip" data-date="last-year">去年</button>
+        </div>
+        <div class="filter-chips" id="seasonFilterRowMobile" style="display:none;">
+          <button class="filter-chip" data-date="spring">春季</button>
+          <button class="filter-chip" data-date="summer">夏季</button>
+          <button class="filter-chip" data-date="autumn">秋季</button>
+          <button class="filter-chip" data-date="winter">冬季</button>
+        </div>
+        <div class="custom-date-row" id="customDateRowMobile" style="display:none;">
+          <input type="date" id="dateFromMobile">
+          <span>至</span>
+          <input type="date" id="dateToMobile">
+        </div>
+      </div>
+      <div class="filter-divider"></div>
+      <div class="filter-section">
+        <div class="filter-section-label">视图</div>
+        <div class="filter-chips">
+          <button class="filter-chip active" id="viewGroupedMobile">按月</button>
+          <button class="filter-chip" id="viewFlatMobile">平铺</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2089,6 +2232,160 @@
     } else {
       empty.style.display = 'block';
     }
+
+    /* === Mobile filter events === */
+
+    // 1. Filter toggle — expand/collapse filter panel
+    document.getElementById('filterToggle').addEventListener('click', () => {
+      const panel = document.getElementById('filterPanel');
+      const toggle = document.getElementById('filterToggle');
+      const label = document.getElementById('filterLabel');
+      panel.classList.toggle('open');
+      toggle.classList.toggle('active');
+      if (label) label.textContent = panel.classList.contains('open') ? '收起' : '筛选';
+    });
+
+    // 2. Category filter (mobile)
+    document.querySelectorAll('#catFilterRowMobile [data-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.filterCat = btn.dataset.cat;
+        // The global [data-cat] handler already clears all [data-cat] and
+        // sets active on the clicked chip. Explicitly sync desktop cat row.
+        document.querySelectorAll('#catFilterRow [data-cat]').forEach(b => b.classList.remove('active'));
+        const desktopBtn = document.querySelector(`#catFilterRow [data-cat="${btn.dataset.cat}"]`);
+        if (desktopBtn) desktopBtn.classList.add('active');
+        applyFilters();
+      });
+    });
+
+    // 3. Status filter (mobile)
+    document.querySelectorAll('#statusFilterRowMobile [data-status]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.filterStatus = btn.dataset.status;
+        document.querySelectorAll('#statusFilterRow [data-status]').forEach(b => b.classList.remove('active'));
+        const desktopBtn = document.querySelector(`#statusFilterRow [data-status="${btn.dataset.status}"]`);
+        if (desktopBtn) desktopBtn.classList.add('active');
+        applyFilters();
+      });
+    });
+
+    // 4. Date mode switching (mobile) — presets / season / custom
+    document.querySelectorAll('.date-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.dataset.mode;
+        // Toggle mobile date rows
+        document.getElementById('dateFilterRowMobile').style.display = mode === 'presets' ? '' : 'none';
+        document.getElementById('seasonFilterRowMobile').style.display = mode === 'season' ? '' : 'none';
+        document.getElementById('customDateRowMobile').style.display = mode === 'custom' ? 'flex' : 'none';
+        // Set state based on mode
+        if (mode === 'presets') {
+          state.datePreset = 'all';
+          document.querySelectorAll('#dateFilterRowMobile [data-date]').forEach(b => b.classList.remove('active'));
+          const allBtn = document.querySelector('#dateFilterRowMobile [data-date="all"]');
+          if (allBtn) allBtn.classList.add('active');
+        } else if (mode === 'season') {
+          if (!['spring','summer','autumn','winter'].includes(state.datePreset)) {
+            state.datePreset = 'spring';
+          }
+          document.querySelectorAll('#seasonFilterRowMobile [data-date]').forEach(b => b.classList.remove('active'));
+          const seasonBtn = document.querySelector(`#seasonFilterRowMobile [data-date="${state.datePreset}"]`);
+          if (seasonBtn) seasonBtn.classList.add('active');
+        } else {
+          state.datePreset = 'all';
+        }
+        // Sync desktop date-mode buttons (mobile "presets" ↔ desktop "yearmonth")
+        const desktopMode = mode === 'presets' ? 'yearmonth' : mode;
+        document.querySelectorAll('.date-bar [data-mode]').forEach(b => b.classList.remove('active'));
+        const desktopModeBtn = document.querySelector(`.date-bar [data-mode="${desktopMode}"]`);
+        if (desktopModeBtn) desktopModeBtn.classList.add('active');
+        applyFilters();
+      });
+    });
+
+    // 5. Date presets (mobile) — data-date values (all, this-month, last-month, etc.)
+    document.querySelectorAll('#dateFilterRowMobile [data-date]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.datePreset = btn.dataset.date;
+        // Clear custom date inputs
+        document.getElementById('dateFromMobile').value = '';
+        document.getElementById('dateToMobile').value = '';
+        if (state.datePreset !== 'all') {
+          state.dateFrom = ''; state.dateTo = '';
+        }
+        // Update mobile active (clear both mobile date rows)
+        document.querySelectorAll('#dateFilterRowMobile [data-date]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#seasonFilterRowMobile [data-date]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // Sync desktop date-preset buttons (mobile data-date ↔ desktop data-preset)
+        const preset = btn.dataset.date;
+        document.querySelectorAll('#yearmonthPresets [data-preset]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#seasonPresets [data-preset]').forEach(b => b.classList.remove('active'));
+        const desktopBtn = document.querySelector(`#yearmonthPresets [data-preset="${preset}"]`)
+                        || document.querySelector(`#seasonPresets [data-preset="${preset}"]`);
+        if (desktopBtn) desktopBtn.classList.add('active');
+        applyFilters();
+      });
+    });
+
+    // 6. Season filter (mobile) — data-date values (spring, summer, autumn, winter)
+    document.querySelectorAll('#seasonFilterRowMobile [data-date]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.datePreset = btn.dataset.date;
+        // Clear custom date inputs
+        document.getElementById('dateFromMobile').value = '';
+        document.getElementById('dateToMobile').value = '';
+        state.dateFrom = ''; state.dateTo = '';
+        // Update mobile active
+        document.querySelectorAll('#dateFilterRowMobile [data-date]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#seasonFilterRowMobile [data-date]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // Sync desktop season preset buttons
+        const preset = btn.dataset.date;
+        document.querySelectorAll('#yearmonthPresets [data-preset]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#seasonPresets [data-preset]').forEach(b => b.classList.remove('active'));
+        const desktopBtn = document.querySelector(`#seasonPresets [data-preset="${preset}"]`);
+        if (desktopBtn) desktopBtn.classList.add('active');
+        applyFilters();
+      });
+    });
+
+    // 7. Custom date inputs (mobile)
+    document.getElementById('dateFromMobile').addEventListener('change', e => {
+      state.dateFrom = e.target.value;
+      if (state.dateFrom) {
+        document.querySelectorAll('#dateFilterRowMobile [data-date]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#seasonFilterRowMobile [data-date]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
+        state.datePreset = 'all';
+      }
+      applyFilters();
+    });
+    document.getElementById('dateToMobile').addEventListener('change', e => {
+      state.dateTo = e.target.value;
+      if (state.dateTo) {
+        document.querySelectorAll('#dateFilterRowMobile [data-date]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#seasonFilterRowMobile [data-date]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
+        state.datePreset = 'all';
+      }
+      applyFilters();
+    });
+
+    // 8. View toggle (mobile)
+    document.getElementById('viewGroupedMobile').addEventListener('click', () => {
+      state.groupByMonth = true;
+      updateViewButtons();
+      document.getElementById('viewGroupedMobile').classList.add('active');
+      document.getElementById('viewFlatMobile').classList.remove('active');
+      applyFilters();
+    });
+    document.getElementById('viewFlatMobile').addEventListener('click', () => {
+      state.groupByMonth = false;
+      updateViewButtons();
+      document.getElementById('viewGroupedMobile').classList.remove('active');
+      document.getElementById('viewFlatMobile').classList.add('active');
+      applyFilters();
+    });
 
 </script>
 </body>
