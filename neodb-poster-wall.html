@@ -1723,7 +1723,7 @@
       let commentH = 0;
       if (comment) {
         const tmp = document.createElement('canvas').getContext('2d');
-        tmp.font = '14px Georgia, "Playfair Display", serif';
+        tmp.font = 'italic 15px Georgia, "Playfair Display", serif';
         commentH = wrapText(tmp, comment, bodyWidth, 30).length * 20;
       }
 
@@ -1802,9 +1802,9 @@
       const titleLines = wrapText(ctx, title, infoW, 3);
       let infoY = headerPad + 4;
       titleLines.forEach(line => { ctx.fillText(line, infoX, infoY + 18); infoY += 22; });
-      infoY += 6;
+      infoY += 14;
       // Category
-      ctx.fillStyle = '#555'; ctx.font = '11px -apple-system, sans-serif';
+      ctx.fillStyle = '#888'; ctx.font = '10px -apple-system, sans-serif';
       ctx.fillText(catLabels[cat] || cat, infoX, infoY);
       infoY += 18;
       // Community rating
@@ -1839,7 +1839,7 @@
       let bodyCY = dividerY + 20;
       if (comment) {
         ctx.fillStyle = '#555';
-        ctx.font = '14px Georgia, "Playfair Display", serif';
+        ctx.font = 'italic 15px Georgia, "Playfair Display", serif';
         const commentLines = wrapText(ctx, comment, bodyWidth, 30);
         commentLines.forEach(line => { ctx.fillText(line, bodyPad, bodyCY + 16); bodyCY += 20; });
         bodyCY += 6;
