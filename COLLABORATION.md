@@ -24,16 +24,28 @@
 - **单文件架构**：所有 HTML/CSS/JS 都在 neodb-poster-wall.html 中
 - **Canvas 2D 渲染**：绕过 html2canvas 的兼容性问题，直接渲染导出
 - **无外部依赖**：仅使用 Google Fonts（Playfair Display + Inter）
-- **GitHub Pages 部署**：push 到 main 分支自动部署
+- **GitHub Pages 部署**：推送到 `dev` 分支不触发部署，合并到 `main` 分支自动部署
 - **双筛选器架构**：桌面端 `.toolbar / .sub-toolbar / .date-bar` 和移动端 `.mobile-filters` 是两套完全独立的 DOM，通过 CSS 媒体查询控制显隐，JS 共享同一个 state 对象和 `applyFilters()`
 
 ## 协作流程
+
+### 日常开发（不触发线上部署）
 1. 本地修改代码
 2. `git add -A; git commit -m "描述"`
-3. `$env:https_proxy="http://127.0.0.1:7892"; git push`
-4. 等待 GitHub Pages 部署（约 1-2 分钟）
-5. 刷新线上页面验证效果
-6. ⚠️ CDN 有缓存延迟，建议 URL 加 `?ts=时间戳` 参数绕过缓存
+3. `$env:https_proxy="http://127.0.0.1:7892"; git push origin dev`
+4. 开发分支不会触发 Cloudflare Pages 部署，可以随意调试
+
+### 发布上线（触发部署）
+1. 确认 `dev` 分支代码已稳定
+2. `$env:https_proxy="http://127.0.0.1:7892"; git checkout main; git merge dev; git push`
+3. 推送到 main 分支后，GitHub Pages 自动部署（约 1-2 分钟）
+4. 刷新线上页面验证效果
+5. ️ CDN 有缓存延迟，建议 URL 加 `?ts=时间戳` 参数绕过缓存
+
+### 线上地址
+- GitHub Pages: `https://yulancc.github.io/neodb-poster/`
+- GitHub 仓库: `https://github.com/YULANcc/neodb-poster`
+- 本地代理端口: 7892（非 7890）
 
 ## 踩过的坑
 
