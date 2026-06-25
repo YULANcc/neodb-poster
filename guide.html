@@ -318,14 +318,18 @@
             点击右上角的齿轮图标，展开设置面板。填写你的 NeoDB 实例地址和 Access Token。
           </div>
           <div class="step-tip">
-            <strong>如何获取 Access Token？</strong><br>
-            1. 登录 <a href="https://neodb.social" target="_blank">neodb.social</a>（或你的自建实例）<br>
-            2. 点击页面右上角头像 → <strong>设置</strong><br>
-            3. 在设置页面左侧菜单中找到 <strong>开发者</strong>（Developer）<br>
-            4. 进入开发者页面后，点击 <strong>创建应用</strong>（Create App）<br>
-            5. 填写应用名称（随意填写，如 "The Shelf"），点击确认创建<br>
-            6. 创建成功后，页面会显示一个 <strong>Access Token</strong>（一串以字母数字组成的字符串）<br>
-            7. 复制这个 Token，粘贴到本工具的设置面板中
+            <strong>如何获取 Access Token？</strong><br><br>
+            <strong>方式一（推荐，最简单）：</strong><br>
+            1. 浏览器访问 <a href="https://neodb.social/developer/" target="_blank">neodb.social/developer/</a><br>
+            2. 展开 <strong>"Test Access Token"</strong> 面板<br>
+            3. 点击按钮生成 Token（注意：生成的新 Token 会替换旧的）<br>
+            4. 复制生成的 Token，粘贴到设置面板<br><br>
+            <strong>方式二（OAuth 流程）：</strong><br>
+            1. 向 <code>POST https://neodb.social/api/v1/apps</code> 注册应用，获取 client_id 和 client_secret<br>
+            2. 打开授权链接 <code>https://neodb.social/oauth/authorize?client_id=CLIENT_ID&...</code><br>
+            3. 用户授权后获取 Authorization Code<br>
+            4. 用 Code 换取 Access Token<br>
+            详细文档：<a href="https://neodb.net/api/" target="_blank">neodb.net/api</a>
           </div>
         </div>
       </div>
